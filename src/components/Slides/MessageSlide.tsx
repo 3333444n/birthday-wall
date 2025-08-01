@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { SlideProps } from '../../types';
-import QRCode from 'react-qr-code';
 
 interface BirthdayMessage {
   text: string;
@@ -43,26 +42,16 @@ const MessageSlide: React.FC<SlideProps> = ({ isActive }) => {
     };
   };
 
-  // Rotate messages randomly
+  // Generate ONE random message when slide becomes active
   useEffect(() => {
     if (!isActive) return;
 
-    // Set initial random message
+    // Set one random message for the entire slide duration
     setCurrentMessage(generateRandomMessage());
-
-    const messageInterval = setInterval(() => {
-      setShowMessage(false);
-      
-      setTimeout(() => {
-        setCurrentMessage(generateRandomMessage());
-        setShowMessage(true);
-      }, 300); // Brief pause for transition effect
-      
-    }, 2500); // Change message every 2.5 seconds
-
-    return () => clearInterval(messageInterval);
+    setShowMessage(true);
+    
+    // No interval - message stays the same for entire slide duration
   }, [isActive]);
-  const photoUrl = `${window.location.origin}/photo`;
 
   // BYPASS SlideContainer to fix black screen issue
   if (!isActive) {
@@ -71,21 +60,7 @@ const MessageSlide: React.FC<SlideProps> = ({ isActive }) => {
 
   return (
     <div className="fixed inset-0 w-full h-full bg-white z-10">
-        {/* QR Code */}
-        <div className="absolute top-8 right-8 bg-gray-50 p-4 rounded-xl shadow-lg z-10">
-          <div className="text-center mb-3">
-            <p className="text-gray-800 font-semibold">¡Captura Recuerdos!</p>
-            <p className="text-gray-600 text-sm">Escanea para fotos</p>
-          </div>
-          <QRCode
-            size={120}
-            value={photoUrl}
-            bgColor="#ffffff"
-            fgColor="#000000"
-          />
-        </div>
-
-        {/* Main Message */}
+        {/* Main Message - Centered */}
         <div className="absolute inset-0 flex items-center justify-center">
           <div 
             className={`text-center transition-all duration-500 transform ${

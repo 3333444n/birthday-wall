@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import DrawingSlide from '../components/Slides/DrawingSlide';
-import PhotoSlide from '../components/Slides/PhotoSlide';
 import BouncingSlide from '../components/Slides/BouncingSlide';
 import MessageSlide from '../components/Slides/MessageSlide';
 import QRCodeSlide from '../components/Slides/QRCodeSlide';
@@ -19,18 +17,6 @@ const Viewer: React.FC = () => {
   // Slide configuration with actual components
   const slides: SlideConfig[] = [
     { 
-      type: 'drawing', 
-      title: '🎨 Collaborative Drawing', 
-      duration: 15000, // 15 seconds
-      component: DrawingSlide 
-    },
-    { 
-      type: 'photos', 
-      title: '📸 Party Photos', 
-      duration: 12000, // 12 seconds
-      component: PhotoSlide 
-    },
-    { 
       type: 'bouncing', 
       title: '🏀 Bouncing Birthday Face', 
       duration: 18000, // 18 seconds
@@ -44,7 +30,7 @@ const Viewer: React.FC = () => {
     },
     { 
       type: 'qr', 
-      title: '📱 Join the Party', 
+      title: '🎵 Únete al Jam de Spotify', 
       duration: 8000, // 8 seconds
       component: QRCodeSlide 
     },
@@ -136,10 +122,6 @@ const Viewer: React.FC = () => {
         </div>
       </div>
 
-      {/* Current slide title (for debugging) */}
-      <div className="fixed top-4 left-4 text-white/50 text-sm z-50 bg-black/20 backdrop-blur-sm rounded-lg px-3 py-2">
-        {slides[currentSlide].title}
-      </div>
     </div>
   );
 };

@@ -244,13 +244,13 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
   }
 
   return (
-    <div className="fixed inset-0 w-full h-full bg-black z-10">
+    <div className="fixed inset-0 w-full h-full bg-white z-10">
       {/* Pure Bouncing Face - No Container, Just Image */}
       <img
         ref={animationBoxRef}
         src={faceImages[currentPhotoIndexRef.current % faceImages.length]}
         alt={`${birthdayPersonName} bouncing`}
-        className="absolute object-cover rounded-full shadow-2xl z-30"
+        className="absolute object-cover rounded-full z-30"
         style={{
           left: `${positionRef.current.x}px`,
           top: `${positionRef.current.y}px`,
