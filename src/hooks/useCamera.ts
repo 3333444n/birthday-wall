@@ -43,7 +43,10 @@ export const useCamera = () => {
 
   // Request camera permissions and start stream
   const startCamera = useCallback(async (constraints?: MediaStreamConstraints) => {
+    console.log('Starting camera...');
+    
     if (!isCameraSupported()) {
+      console.error('Camera not supported');
       setState(prev => ({
         ...prev,
         error: {
@@ -55,6 +58,7 @@ export const useCamera = () => {
     }
 
     try {
+      console.log('Requesting camera access...');
       setState(prev => ({ ...prev, error: null, isCapturing: true }));
 
       // Default constraints optimized for mobile
@@ -71,10 +75,28 @@ export const useCamera = () => {
       const stream = await navigator.mediaDevices.getUserMedia(
         constraints || defaultConstraints
       );
+      
+      console.log('Camera stream obtained:', stream);
 
       if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-        videoRef.current.play();
+        const video = videoRef.current;
+        video.srcObject = stream;
+        
+        // Wait for metadata to load before playing
+        video.onloadedmetadata = () => {
+          console.log('Video metadata loaded, starting playback');
+          video.play().catch(error => {
+            console.error('Error playing video:', error);
+          });
+        };
+        
+        // Also handle the case where metadata is already loaded
+        if (video.readyState >= 1) {
+          console.log('Video metadata already loaded, starting playback immediately');
+          video.play().catch(error => {
+            console.error('Error playing video:', error);
+          });
+        }
       }
 
       setState(prev => ({
@@ -85,7 +107,8 @@ export const useCamera = () => {
         error: null,
         stream
       }));
-
+      
+      console.log('Camera successfully started');
       return true;
     } catch (error: any) {
       console.error('Camera access error:', error);
@@ -122,41 +145,63 @@ export const useCamera = () => {
 
   // Stop camera stream
   const stopCamera = useCallback(() => {
-    if (state.stream) {
-      state.stream.getTracks().forEach(track => {
-        track.stop();
-      });
-    }
+    setState(prev => {
+      // Stop all tracks in current stream
+      if (prev.stream) {
+        prev.stream.getTracks().forEach(track => {
+          track.stop();
+        });
+      }
 
-    if (videoRef.current) {
-      videoRef.current.srcObject = null;
-    }
+      // Clear video element
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
 
-    setState(prev => ({
-      ...prev,
-      isActive: false,
-      stream: null
-    }));
-  }, [state.stream]);
-
-  // Switch between front and back camera
-  const switchCamera = useCallback(async () => {
-    if (!state.isActive) return false;
-
-    const currentFacingMode = state.stream?.getVideoTracks()[0]?.getSettings()?.facingMode;
-    const newFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
-
-    stopCamera();
-    
-    return await startCamera({
-      video: {
-        facingMode: newFacingMode,
-        width: { ideal: 1280, max: 1920 },
-        height: { ideal: 720, max: 1080 }
-      },
-      audio: false
+      return {
+        ...prev,
+        isActive: false,
+        stream: null
+      };
     });
-  }, [state.isActive, state.stream, startCamera, stopCamera]);
+  }, []);
+
+  // Switch between front and back camera  
+  const switchCamera = useCallback(async () => {
+    return new Promise<boolean>((resolve) => {
+      setState(prev => {
+        if (!prev.isActive || !prev.stream) {
+          resolve(false);
+          return prev;
+        }
+
+        const currentFacingMode = prev.stream.getVideoTracks()[0]?.getSettings()?.facingMode;
+        const newFacingMode = currentFacingMode === 'user' ? 'environment' : 'user';
+
+        // Stop current stream
+        prev.stream.getTracks().forEach(track => track.stop());
+        if (videoRef.current) {
+          videoRef.current.srcObject = null;
+        }
+
+        // Start new camera with opposite facing mode
+        startCamera({
+          video: {
+            facingMode: newFacingMode,
+            width: { ideal: 1280, max: 1920 },
+            height: { ideal: 720, max: 1080 }
+          },
+          audio: false
+        }).then(resolve);
+
+        return {
+          ...prev,
+          isActive: false,
+          stream: null
+        };
+      });
+    });
+  }, [startCamera]);
 
   // Capture photo from video stream
   const capturePhoto = useCallback(async (): Promise<CapturedPhoto | null> => {
@@ -239,9 +284,13 @@ export const useCamera = () => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      stopCamera();
+      // Direct cleanup without depending on stopCamera callback
+      if (videoRef.current) {
+        videoRef.current.srcObject = null;
+      }
+      // Note: stream cleanup will be handled by component state cleanup
     };
-  }, [stopCamera]);
+  }, []);
 
   // Clear error
   const clearError = useCallback(() => {

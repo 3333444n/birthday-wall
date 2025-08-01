@@ -23,16 +23,28 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
     clearError
   } = useCamera();
 
-  const [isInitialized, setIsInitialized] = useState(false);
   const [currentFacingMode, setCurrentFacingMode] = useState<'user' | 'environment'>('environment');
 
   // Auto-start camera when component mounts (if supported)
   useEffect(() => {
-    if (isSupported && !isInitialized) {
+    console.log('CameraCapture mount state:', { isSupported, isActive, error: !!error });
+    if (isSupported && !isActive && !error) {
+      console.log('Auto-starting camera...');
       handleStartCamera();
-      setIsInitialized(true);
     }
-  }, [isSupported, isInitialized]);
+  }, [isSupported]);  // Remove isInitialized dependency to prevent re-runs
+
+  // Debug effect to track state changes
+  useEffect(() => {
+    console.log('CameraCapture state changed:', { 
+      isSupported, 
+      isActive, 
+      isCapturing, 
+      hasError: !!error,
+      errorCode: error?.code,
+      videoElement: !!videoRef.current
+    });
+  }, [isSupported, isActive, isCapturing, error]);
 
   // Handle camera errors
   useEffect(() => {
@@ -145,6 +157,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
 
   // Loading/initializing camera
   if (!isActive && !error) {
+    console.log('Showing camera initialization screen');
     return (
       <div className="text-center py-12">
         <div className="text-6xl mb-4 animate-pulse">📱</div>
@@ -154,12 +167,16 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
         <p className="text-gray-600 mb-6">
           Preparando tu cámara para capturar fotos
         </p>
-        <div className="animate-spin w-8 h-8 border-4 border-party-primary border-t-transparent rounded-full mx-auto"></div>
+        <div className="animate-spin w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+        <div className="mt-4 text-sm text-gray-500">
+          Estado: isSupported={String(isSupported)}, isActive={String(isActive)}, error={String(!!error)}
+        </div>
       </div>
     );
   }
 
   // Camera active - show viewfinder
+  console.log('Rendering camera viewfinder, isActive:', isActive);
   return (
     <div className="relative">
       {/* Video Element */}
@@ -173,6 +190,25 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           aspectRatio: '16/9',
           objectFit: 'cover',
           maxHeight: '60vh'
+        }}
+        onLoadedMetadata={() => {
+          console.log('Video metadata loaded, dimensions:', {
+            videoWidth: videoRef.current?.videoWidth,
+            videoHeight: videoRef.current?.videoHeight,
+            srcObject: !!videoRef.current?.srcObject
+          });
+        }}
+        onPlay={() => {
+          console.log('Video started playing');
+        }}
+        onError={(e) => {
+          console.error('Video error:', e);
+        }}
+        onLoadedData={() => {
+          console.log('Video data loaded');
+        }}
+        onCanPlay={() => {
+          console.log('Video can play');
         }}
       />
 

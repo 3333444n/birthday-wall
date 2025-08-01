@@ -1,55 +1,94 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../../services/firebase';
-import { DrawingData, SlideProps } from '../../types';
+import { Drawing, SlideProps } from '../../types';
+import { subscribeToDrawings, getDrawingWithImage } from '../../utils/firestore';
 import QRCode from 'react-qr-code';
 
 const DrawingSlide: React.FC<SlideProps> = ({ isActive }) => {
-  const [drawings, setDrawings] = useState<DrawingData[]>([]);
+  const [drawings, setDrawings] = useState<Array<Drawing & { imageData?: string }>>([]);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Listen for real-time drawings with error handling
   useEffect(() => {
     if (!isActive) return;
 
-    const unsubscribe = onSnapshot(
-      collection(db, 'drawings'),
-      (snapshot) => {
-        const drawingData = snapshot.docs.map(doc => ({
-          id: doc.id,
-          ...doc.data()
-        })) as DrawingData[];
-        setDrawings(drawingData);
-      },
-      (error) => {
-        console.warn('Drawings unavailable (offline mode):', error);
-        // Set empty array in offline mode - component will show instructions
+    const unsubscribe = subscribeToDrawings(async (rawDrawings) => {
+      try {
+        console.log('DrawingSlide: Received raw drawings:', rawDrawings.length);
+        
+        // Get image data for each drawing
+        const drawingsWithImages = await Promise.all(
+          rawDrawings.map(async (drawing) => {
+            const result = await getDrawingWithImage(drawing);
+            console.log('DrawingSlide: Processing drawing', drawing.id, 'has imageData:', !!result.imageData);
+            return result;
+          })
+        );
+        
+        console.log('DrawingSlide: Processed drawings with images:', drawingsWithImages.length);
+        setDrawings(drawingsWithImages);
+      } catch (error) {
+        console.warn('Error loading drawing images:', error);
         setDrawings([]);
       }
-    );
+    });
 
     return () => unsubscribe();
   }, [isActive]);
 
   // Display drawings on canvas when they update
   useEffect(() => {
-    if (!canvasRef.current || !isActive) return;
+    if (!canvasRef.current || !isActive || drawings.length === 0) return;
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    console.log('DrawingSlide: Rendering', drawings.length, 'drawings to canvas');
+
     // Clear canvas
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // If we have drawing URLs, load and display them
-    drawings.forEach((drawing) => {
-      if (drawing.url) {
+    // Load and composite all drawings sequentially
+    let loadedCount = 0;
+    const totalDrawings = drawings.filter(d => d.imageData).length;
+    
+    if (totalDrawings === 0) {
+      console.log('DrawingSlide: No drawings with imageData to render');
+      return;
+    }
+
+    drawings.forEach((drawing, index) => {
+      if (drawing.imageData) {
         const img = new Image();
         img.onload = () => {
+          loadedCount++;
+          console.log('DrawingSlide: Loaded image', index + 1, 'of', totalDrawings);
+          
+          // Use different blend modes for layering
+          if (loadedCount === 1) {
+            // First drawing - draw normally
+            ctx.globalAlpha = 1.0;
+            ctx.globalCompositeOperation = 'source-over';
+          } else {
+            // Subsequent drawings - blend with what's already there
+            ctx.globalAlpha = 0.7;
+            ctx.globalCompositeOperation = 'multiply';
+          }
+          
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          
+          // Reset for next drawing
+          ctx.globalAlpha = 1.0;
+          ctx.globalCompositeOperation = 'source-over';
+          
+          if (loadedCount === totalDrawings) {
+            console.log('DrawingSlide: All drawings rendered successfully');
+          }
         };
-        img.src = drawing.url;
+        img.onerror = (error) => {
+          console.error('DrawingSlide: Failed to load drawing image:', error);
+        };
+        img.src = drawing.imageData;
       }
     });
   }, [drawings, isActive]);
