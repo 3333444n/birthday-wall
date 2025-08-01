@@ -1,0 +1,42 @@
+{
+  "name": "bday-dany",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "type-check": "tsc --noEmit",
+    "emulators": "firebase emulators:start",
+    "deploy": "npm run build && firebase deploy",
+    "deploy:hosting": "npm run build && firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules,storage",
+    "firebase:login": "firebase login",
+    "firebase:init": "firebase init"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@vitejs/plugin-react": "^4.7.0",
+    "fabric": "^6.7.1",
+    "firebase": "^12.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-qr-code": "^2.0.18",
+    "react-router-dom": "^7.7.1",
+    "typescript": "^5.9.2",
+    "vite": "^7.0.6"
+  },
+  "devDependencies": {
+    "@types/fabric": "^5.3.10",
+    "@types/react": "^19.1.9",
+    "@types/react-dom": "^19.1.7",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.17"
+  }
+}
