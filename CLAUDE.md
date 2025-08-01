@@ -613,6 +613,55 @@ firebase functions:log
 
 ---
 
+## Step 5 - Bouncing Face Animation ✅ COMPLETED
+
+### DVD Screensaver Animation Implementation
+
+**Core Achievement**: Fully functional DVD-style bouncing face animation with clean, minimal design.
+
+**Key Components Implemented:**
+- `src/components/Slides/BouncingSlide.tsx` - Complete bouncing animation with face rotation
+- Direct DOM manipulation for optimal performance (bypasses React re-render issues)
+- 360px × 360px face images for maximum projector visibility
+- Physics-based bouncing with proper wall collision detection
+- Face rotation system cycling through 12 birthday photos on each wall bounce
+
+**Technical Breakthrough - SlideContainer Issue Resolution:**
+- **Problem**: SlideContainer component was causing black screens due to flex centering conflicts
+- **Solution**: Bypassed SlideContainer entirely for bouncing animation
+- **Method**: Direct `return null` when inactive, direct rendering when active
+- **Result**: This solution pattern can be applied to fix other slides showing black screens
+
+**Key Features Working:**
+- **Clean Visual Design**: Pure face images with transparent backgrounds, no colored containers
+- **Large Size**: 360px faces clearly visible on projector screens
+- **Smooth Animation**: 50ms intervals with direct DOM position updates
+- **Face Rotation**: Changes to next face photo on every wall bounce (X or Y direction)
+- **Corner Celebration**: Special 🎯 target animation when hitting exact screen corners
+- **Minimal UI**: Only slide dots and progress bar visible, no text clutter
+
+**Performance Optimizations:**
+- Uses `useRef` instead of `useState` for animation values (prevents infinite re-renders)
+- Direct DOM style updates (`element.style.left/top`) for smooth animation
+- Window-based dimensions for accurate bounce detection
+- Optimized collision detection with proper boundary calculations
+
+**Files Created/Modified:**
+```
+src/components/Slides/BouncingSlide.tsx    # Complete rewrite - working animation
+src/assets/faces/dany0.webp - dany11.webp # 12 birthday person face images
+```
+
+**Debugging Pattern Discovered:**
+The key insight for other slides: The SlideContainer component's flex centering can interfere with absolute positioning. The solution is to either:
+1. Override SlideContainer classes with `className="relative"` 
+2. Bypass SlideContainer entirely for complex animations
+3. Use `fixed inset-0` positioning to ensure full-screen coverage
+
+This pattern will help resolve black screen issues in MessageSlide, QRCodeSlide, and other slides.
+
+---
+
 ## Step 4 Implementation Details ✅ COMPLETED
 
 ### Camera System Architecture

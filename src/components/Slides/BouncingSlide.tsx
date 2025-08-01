@@ -122,8 +122,8 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
       // Use window dimensions since we're fixed positioned
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
-      const boxWidth = 180; // Updated to match new size
-      const boxHeight = 180;
+      const boxWidth = 360; // Double size
+      const boxHeight = 360;
 
       maxRef.current.x = windowWidth - boxWidth;
       maxRef.current.y = windowHeight - boxHeight;
@@ -254,8 +254,8 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
         style={{
           left: `${positionRef.current.x}px`,
           top: `${positionRef.current.y}px`,
-          width: '180px',  // Bigger size
-          height: '180px', // Bigger size
+          width: '360px',  // Double size
+          height: '360px', // Double size
           transition: 'none'
         }}
         onLoad={() => console.log('✅ Face image loaded:', faceImages[currentPhotoIndexRef.current % faceImages.length])}
