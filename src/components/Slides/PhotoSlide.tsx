@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { collection, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { db } from '../../services/firebase';
 import { PhotoData, SlideProps } from '../../types';
-import SlideContainer from './SlideContainer';
 import QRCode from 'react-qr-code';
 
-const PhotoSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
+const PhotoSlide: React.FC<SlideProps> = ({ isActive }) => {
   const [photos, setPhotos] = useState<PhotoData[]>([]);
 
   // Listen for real-time photos with error handling
@@ -51,44 +50,44 @@ const PhotoSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
     return patterns[index % patterns.length];
   };
 
+  // BYPASS SlideContainer to fix black screen issue
+  if (!isActive) {
+    return null; // Don't render anything if not active
+  }
+
   return (
-    <SlideContainer isActive={isActive} duration={duration}>
-      <div className="relative w-full h-full p-8 bg-gradient-to-br from-purple-600 via-pink-500 to-orange-500">
-        {/* Title */}
-        <div className="absolute top-8 left-8 z-10">
-          <h1 className="text-6xl font-bold text-white drop-shadow-2xl">
-            📸 Party Photo Collage
-          </h1>
-          <p className="text-2xl text-white/80 mt-2">
-            {photos.length} photo{photos.length !== 1 ? 's' : ''} captured live!
-          </p>
+    <div className="fixed inset-0 w-full h-full bg-white z-10">
+      {/* QR Code for photos */}
+      <div className="absolute top-8 right-8 bg-gray-50 p-4 rounded-xl shadow-lg z-20">
+        <div className="text-center mb-3">
+          <p className="text-gray-800 font-semibold">Captura Recuerdos</p>
+          <p className="text-gray-600 text-sm">Escanea para fotos</p>
         </div>
+        <QRCode
+          size={120}
+          value={photoUrl}
+          bgColor="#ffffff"
+          fgColor="#000000"
+        />
+      </div>
 
-        {/* QR Code for photos */}
-        <div className="absolute top-8 right-8 bg-white p-4 rounded-xl shadow-2xl z-10">
-          <div className="text-center mb-3">
-            <p className="text-gray-800 font-semibold">Take a Photo!</p>
-            <p className="text-gray-600 text-sm">Scan to share memories</p>
+      {/* Photo Grid */}
+      {photos.length > 0 ? (
+        <>
+          {/* Photo count */}
+          <div className="absolute top-8 left-8 z-20">
+            <p className="text-3xl text-gray-700 font-serif">
+              {photos.length} foto{photos.length !== 1 ? 's' : ''} de la fiesta
+            </p>
           </div>
-          <QRCode
-            size={120}
-            value={photoUrl}
-            bgColor="#ffffff"
-            fgColor="#000000"
-          />
-        </div>
 
-        {/* Photo Grid */}
-        {photos.length > 0 ? (
-          <div className="absolute inset-0 pt-32 pb-16 px-8">
+          {/* Photo grid */}
+          <div className="absolute inset-0 pt-24 pb-8 px-8">
             <div className="grid grid-cols-6 grid-rows-4 gap-4 h-full w-full">
               {photos.slice(0, 12).map((photo, index) => (
                 <div
                   key={photo.id}
-                  className={`${getGridItemClass(index)} overflow-hidden rounded-lg shadow-lg transform transition-all duration-300 hover:scale-105`}
-                  style={{
-                    animation: `fadeInScale 0.6s ease-out ${index * 0.1}s both`
-                  }}
+                  className={`${getGridItemClass(index)} overflow-hidden rounded-lg shadow-md`}
                 >
                   <img
                     src={photo.thumbnailUrl || photo.url}
@@ -96,62 +95,34 @@ const PhotoSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
                     className="w-full h-full object-cover"
                     loading="lazy"
                   />
-                  {/* Timestamp overlay */}
-                  <div className="absolute bottom-2 right-2 bg-black/50 text-white text-xs px-2 py-1 rounded">
-                    {new Date(photo.timestamp).toLocaleTimeString()}
-                  </div>
                 </div>
               ))}
             </div>
 
             {/* Show more photos indicator */}
             {photos.length > 12 && (
-              <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 bg-white/20 backdrop-blur-sm rounded-full px-6 py-3">
-                <p className="text-white font-semibold">
-                  +{photos.length - 12} more photos
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-100 rounded-full px-6 py-2">
+                <p className="text-gray-700 font-serif text-lg">
+                  +{photos.length - 12} fotos más
                 </p>
               </div>
             )}
           </div>
-        ) : (
-          /* Empty state */
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-center bg-black/50 backdrop-blur-sm rounded-2xl p-12">
-              <div className="text-8xl mb-6">📱</div>
-              <h2 className="text-4xl text-white mb-4">Capture the Moments!</h2>
-              <p className="text-xl text-white/80 mb-6">
-                Scan the QR code to take photos and watch them appear instantly
-              </p>
-              <div className="animate-pulse">
-                <div className="text-2xl text-white/60">
-                  Waiting for the first photo...
-                </div>
-              </div>
-            </div>
+        </>
+      ) : (
+        /* Empty state */
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-8xl text-black font-serif leading-tight mb-4">
+              Compartir Fotos
+            </h1>
+            <p className="text-4xl text-gray-600 font-serif">
+              Escanea el código para capturar recuerdos
+            </p>
           </div>
-        )}
-
-        {/* Floating hearts animation for new photos */}
-        {photos.length > 0 && (
-          <div className="absolute inset-0 pointer-events-none">
-            {[...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="absolute text-4xl animate-bounce"
-                style={{
-                  left: `${20 + i * 30}%`,
-                  top: `${60 + i * 10}%`,
-                  animationDelay: `${i * 0.5}s`,
-                  animationDuration: '2s'
-                }}
-              >
-                💖
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </SlideContainer>
+        </div>
+      )}
+    </div>
   );
 };
 

@@ -64,8 +64,8 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
   }, [canvas, onSave]);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4">
-      <h3 className="text-sm font-medium text-gray-700 mb-3">Canvas Controls</h3>
+    <div className="bg-gray-50 rounded-2xl shadow-lg p-6">
+      <h3 className="text-lg font-serif text-black mb-4">Controles del Lienzo</h3>
       
       <div className="space-y-2">
         {/* Undo Button */}
@@ -83,7 +83,7 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M7.707 3.293a1 1 0 010 1.414L5.414 7H11a7 7 0 017 7v2a1 1 0 11-2 0v-2a5 5 0 00-5-5H5.414l2.293 2.293a1 1 0 11-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
           </svg>
-          Undo Last
+          Deshacer
         </button>
 
         {/* Clear Button */}
@@ -104,7 +104,7 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
             <path fillRule="evenodd" d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" clipRule="evenodd" />
             <path fillRule="evenodd" d="M4 5a2 2 0 012-2h8a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 2a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clipRule="evenodd" />
           </svg>
-          {showClearConfirm ? 'Tap Again to Clear' : 'Clear All'}
+          {showClearConfirm ? 'Toca de Nuevo para Borrar' : 'Borrar Todo'}
         </button>
 
         {/* Save Button */}
@@ -122,7 +122,7 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
           <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
             <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
           </svg>
-          Save Canvas
+          Guardar Lienzo
         </button>
 
         {/* Canvas Info */}

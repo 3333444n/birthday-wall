@@ -30,16 +30,16 @@ const ConnectionStatus: React.FC<ConnectionStatusProps> = ({
   }
 
   return (
-    <div className={`flex items-center space-x-2 ${className}`}>
+    <div className={`flex items-center space-x-3 ${className}`}>
       {isConnected ? (
         <>
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-green-600 text-sm">Connected to party wall</span>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+          <span className="text-gray-700 font-serif">Conectado a la pared de la fiesta</span>
         </>
       ) : (
         <>
-          <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-          <span className="text-red-600 text-sm">Connecting to party wall...</span>
+          <div className="w-3 h-3 bg-red-500 rounded-full animate-pulse"></div>
+          <span className="text-gray-700 font-serif">Conectando a la pared de la fiesta...</span>
         </>
       )}
     </div>

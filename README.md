@@ -14,7 +14,7 @@ Imagine walking into a birthday party and seeing a big screen on the wall that's
 
 3. **🏀 Bouncing Birthday Face**: The birthday person's face bounces around the screen like the old DVD screensaver, changing to different photos each time it hits an edge. Everyone always cheers when it hits a corner perfectly! ✅ **FULLY IMPLEMENTED**
 
-4. **🌍 Happy Birthday Around the World**: The screen shows "Happy Birthday" in different languages, mixed with the birthday person's nicknames and fun messages.
+4. **🌍 Happy Birthday Around the World**: The screen shows "Happy Birthday" in different languages, randomly combined with the birthday person's nicknames (Nanys, Danolo, Dano, Danilo, Nanis, Dany). Every few seconds a new combination appears like "¡Feliz Cumpleaños Danolo!" or "お誕生日おめでとう Nanis!" in elegant serif typography on a clean white background. ✅ **FULLY IMPLEMENTED**
 
 The party host can also pop up announcements on the screen from their phone (like "Cake time in 5 minutes!").
 
@@ -89,12 +89,13 @@ birthday-wall/
 - **Clean design**: Pure faces with transparent containers, no visual clutter
 - **SlideContainer bypass**: Direct rendering solution that works around common black screen issues
 
-### 🌍 Multilingual Birthday Messages
+### 🌍 Multilingual Birthday Messages ✅ FULLY IMPLEMENTED
 
-- **Multiple languages**: Happy Birthday in Spanish, French, English, etc.
-- **Personal touch**: Includes the birthday person's nicknames
-- **Dynamic rotation**: Messages change every few seconds
-- **Customizable**: Easy to add more languages or messages
+- **12 Languages**: Happy Birthday in Spanish, English, French, Italian, German, Japanese, Korean, Russian, Portuguese, Dutch, Chinese, Arabic
+- **Random Nicknames**: Randomly cycles through Dany's nicknames (Nanys, Danolo, Dano, Danilo, Nanis, Dany)
+- **Elegant Design**: Large serif typography on pure white background with QR code in corner
+- **Random Combinations**: Every 2.5 seconds shows a new random nickname + language combination
+- **Clean Interface**: Minimalistic design focusing purely on the birthday message
 
 ### 📱 Host Controller
 

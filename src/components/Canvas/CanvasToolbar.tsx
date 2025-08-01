@@ -19,9 +19,9 @@ const DRAWING_COLORS = [
 
 // Define brush sizes
 const BRUSH_SIZES = [
-  { size: 2, name: 'Fine' },
-  { size: 5, name: 'Medium' },
-  { size: 10, name: 'Thick' },
+  { size: 2, name: 'Fino' },
+  { size: 5, name: 'Mediano' },
+  { size: 10, name: 'Grueso' },
 ];
 
 export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
@@ -54,10 +54,10 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 space-y-4">
+    <div className="bg-gray-50 rounded-2xl shadow-lg p-6 space-y-6">
       {/* Color Picker */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Colors</h3>
+        <h3 className="text-lg font-serif text-black mb-4">Colores</h3>
         <div className="grid grid-cols-6 gap-2">
           {DRAWING_COLORS.map(({ color, name }) => (
             <button
@@ -85,7 +85,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
       {/* Brush Size */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Brush Size</h3>
+        <h3 className="text-lg font-serif text-black mb-4">Tamaño del Pincel</h3>
         <div className="flex gap-2">
           {BRUSH_SIZES.map(({ size, name }) => (
             <button
@@ -122,7 +122,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
 
       {/* Tools */}
       <div>
-        <h3 className="text-sm font-medium text-gray-700 mb-2">Tools</h3>
+        <h3 className="text-lg font-serif text-black mb-4">Herramientas</h3>
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => handleToolChange('brush')}
@@ -144,7 +144,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
             >
               <path d="M15.825.12a.5.5 0 0 1 .132.584c-1.53 3.43-4.743 8.17-7.095 10.64a6.067 6.067 0 0 1-2.373 1.534c-.018.227-.06.538-.16.868-.201.659-.667 1.479-1.708 1.74a8.118 8.118 0 0 1-3.078.132 3.659 3.659 0 0 1-.562-.135 1.382 1.382 0 0 1-.466-.247.714.714 0 0 1-.204-.288.622.622 0 0 1 .004-.443c.095-.245.316-.38.461-.452.394-.197.625-.453.867-.826.095-.144.184-.297.287-.472l.117-.198c.151-.255.326-.54.546-.848.528-.739 1.201-.925 1.746-.896.126.007.243.025.348.048.062-.172.142-.38.238-.608.261-.619.658-1.419 1.187-2.069 2.176-2.67 6.18-6.206 9.117-8.104a.5.5 0 0 1 .596.04z"/>
             </svg>
-            Brush
+            Pincel
           </button>
           
           <button
@@ -167,7 +167,7 @@ export const CanvasToolbar: React.FC<CanvasToolbarProps> = ({
             >
               <path d="M8.086 2.207a2 2 0 0 1 2.828 0l3.879 3.879a2 2 0 0 1 0 2.828l-5.5 5.5A2 2 0 0 1 7.879 15H5.12a2 2 0 0 1-1.414-.586l-2.5-2.5A2 2 0 0 1 .793 10.5L6.293 5a2 2 0 0 1 1.793-.793zm2.121.707a1 1 0 0 0-1.414 0L4.16 7.547l5.293 5.293 4.633-4.633a1 1 0 0 0 0-1.414l-3.879-3.879zM8.746 13.547 3.453 8.254 1.914 9.793a1 1 0 0 0 0 1.414l2.5 2.5a1 1 0 0 0 .707.293H7.88a1 1 0 0 0 .866-.54z"/>
             </svg>
-            Eraser
+            Borrador
           </button>
         </div>
       </div>

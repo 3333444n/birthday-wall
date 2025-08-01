@@ -710,4 +710,67 @@ deploy-storage.sh               # Storage deployment script
 
 ---
 
+## Step 6 - MessageSlide & QRCodeSlide Black Screen Fix + Design Updates ✅ COMPLETED
+
+### Black Screen Issue Resolution
+
+**Core Problem**: MessageSlide and QRCodeSlide were displaying black screens due to SlideContainer's flex centering interfering with absolute positioning.
+
+**Solution Applied**: Following the pattern discovered in BouncingSlide:
+1. **Bypassed SlideContainer entirely** - Return `null` when `!isActive`
+2. **Direct fixed positioning** - Use `fixed inset-0 w-full h-full z-10` 
+3. **Clean imports** - Removed unused SlideContainer imports
+
+### MessageSlide Design Enhancement
+
+**New Minimalistic Design**:
+- **Pure white background** - Clean, professional appearance
+- **Serif typography** - Elegant `font-serif` at `text-8xl` size
+- **Centered message only** - Focus purely on the birthday message
+- **QR code in corner** - Maintained for photo capture functionality
+- **Smooth transitions** - 500ms fade between messages
+
+**Random Name & Language System**:
+- **Dany's Nicknames**: `['Nanys', 'Danolo', 'Dano', 'Danilo', 'Nanis', 'Dany']`
+- **12 Languages**: Spanish, English, French, Italian, German, Japanese, Korean, Russian, Portuguese, Dutch, Chinese, Arabic
+- **Random Combination**: Each message randomly selects a nickname + language combination
+- **Template System**: Uses `{name}` placeholder for dynamic nickname insertion
+
+**Example Messages**:
+- "Happy Birthday Danolo!" (English + Danolo)
+- "¡Feliz Cumpleaños Nanis!" (Spanish + Nanis)
+- "お誕生日おめでとう Dano!" (Japanese + Dano)
+
+### Technical Implementation
+
+**Key Components Updated:**
+```
+src/components/Slides/MessageSlide.tsx    # Complete redesign with random system
+src/components/Slides/QRCodeSlide.tsx     # Black screen fix applied
+```
+
+**Random Message Generation**:
+```typescript
+const generateRandomMessage = (): BirthdayMessage => {
+  const randomNickname = nicknames[Math.floor(Math.random() * nicknames.length)];
+  const randomTemplate = birthdayTemplates[Math.floor(Math.random() * birthdayTemplates.length)];
+  
+  return {
+    text: randomTemplate.template.replace('{name}', randomNickname),
+    language: randomTemplate.language,
+    flag: randomTemplate.flag
+  };
+};
+```
+
+**Features Working:**
+- **Random cycling** - Every 2.5 seconds generates new random nickname + language combo
+- **Clean typography** - Large serif font on pure white background
+- **QR code persistence** - Photo capture QR remains accessible in corner
+- **Smooth transitions** - Fade in/out effects between message changes
+
+**Pattern for Future Slides**: The SlideContainer bypass solution can be applied to any slide experiencing black screen issues by using direct fixed positioning instead of wrapper components.
+
+---
+
 This CLAUDE.md file serves as your comprehensive development guide. Update it as the project evolves and add new sections as needed.

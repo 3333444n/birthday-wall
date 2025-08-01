@@ -1,15 +1,12 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { SlideProps } from '../../types';
-import SlideContainer from './SlideContainer';
-import QRCode from 'react-qr-code';
 
-const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
-  console.log('🏀 BouncingSlide component called with:', { isActive, duration });
+const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
+  console.log('🏀 BouncingSlide component called with:', { isActive });
   const [cornerHits, setCornerHits] = useState(0);
   const [isCornerCelebrating, setIsCornerCelebrating] = useState(false);
   
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animationBoxRef = useRef<HTMLDivElement>(null);
+  const animationBoxRef = useRef<HTMLImageElement>(null);
   const timerRef = useRef<number | null>(null);
   const cornerAnimationTimerRef = useRef<number | null>(null);
   const framesSinceCornerRef = useRef(0);
@@ -38,8 +35,6 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
     new URL('../../assets/faces/dany11.webp', import.meta.url).href
   ];
 
-  // Fallback to emoji faces if images fail to load
-  const emojiPhotos = ['🎂', '🎉', '🎈', '🎁', '🥳', '🎊', '🍰', '🌟', '🎭', '🎯', '🎪', '🎨'];
 
   // Utility functions adapted from jQuery snippet
   const getRandomColor = () => {
@@ -235,7 +230,6 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
   }, [isActive]);
 
   const birthdayPersonName = import.meta.env.VITE_BIRTHDAY_PERSON_NAME || 'Dany';
-  const drawUrl = `${window.location.origin}/draw`;
 
   console.log('BouncingSlide render:', { isActive, cornerHits });
   

@@ -66,19 +66,19 @@ const Draw: React.FC = () => {
   const { width, height } = getCanvasDimensions();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-500 to-pink-500 p-4">
+    <div className="min-h-screen bg-white p-6">
       {/* Header */}
-      <div className="text-center mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">
-          🎨 Draw Together
+      <div className="text-center mb-8">
+        <h1 className="text-6xl text-black font-serif leading-tight mb-4">
+          Dibujar Juntos
         </h1>
-        <p className="text-white/90 text-sm md:text-base">
-          Your drawings appear on the big screen instantly!
+        <p className="text-2xl text-gray-600 font-serif">
+          Tu arte aparece en la pantalla grande
         </p>
       </div>
 
       {/* Main Canvas Area */}
-      <div className="bg-white rounded-lg shadow-xl p-4 mb-6">
+      <div className="bg-gray-50 rounded-2xl shadow-lg p-6 mb-8">
         <DrawingCanvas
           width={width}
           height={height}
@@ -89,7 +89,7 @@ const Draw: React.FC = () => {
       </div>
 
       {/* Drawing Tools */}
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Color and Tool Selection */}
         <CanvasToolbar
           selectedTool={selectedTool}
@@ -106,23 +106,23 @@ const Draw: React.FC = () => {
       </div>
 
       {/* Instructions */}
-      <div className="mt-6 text-center text-white/80 text-sm">
-        <div className="bg-white/10 rounded-lg p-4 backdrop-blur">
-          <h3 className="font-semibold mb-2">How to Draw:</h3>
-          <ul className="space-y-1 text-xs">
-            <li>• Use your finger or stylus to draw on the canvas</li>
-            <li>• Choose colors and brush sizes from the toolbar</li>
-            <li>• Your artwork syncs in real-time with the projector</li>
-            <li>• Everyone at the party can see your drawings instantly!</li>
-          </ul>
+      <div className="mt-8 text-center">
+        <div className="bg-gray-50 rounded-2xl p-6">
+          <h3 className="text-2xl text-black font-serif mb-4">Cómo Dibujar</h3>
+          <div className="space-y-3 text-lg text-gray-700 font-serif">
+            <p>Usa tu dedo o lápiz para dibujar en el lienzo</p>
+            <p>Elige colores y tamaños de pincel de las herramientas de arriba</p>
+            <p>Tu arte se sincroniza instantáneamente con el proyector</p>
+            <p>¡Todos en la fiesta verán tu creación!</p>
+          </div>
         </div>
       </div>
 
       {/* Connection Status */}
-      <div className="fixed bottom-4 right-4">
-        <div className="bg-green-500 text-white px-3 py-1 rounded-full text-xs flex items-center gap-2">
-          <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-          Connected
+      <div className="fixed bottom-6 right-6">
+        <div className="bg-gray-100 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg text-sm font-serif flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+          Conectado
         </div>
       </div>
     </div>
