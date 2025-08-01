@@ -52,6 +52,10 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
     return color;
   };
 
+  const getRandomFaceIndex = () => {
+    return Math.floor(Math.random() * faceImages.length);
+  };
+
   const almostEqual = (a: number, b: number) => Math.abs(a - b) <= 5;
 
   const detectCorner = (newX: number, newY: number, maxX: number, maxY: number, w: number, h: number) => {
@@ -134,26 +138,26 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
       // Bounce X direction
       if (oldX <= 0 || oldX >= maxRef.current.x) {
         directionRef.current.x *= -1;
-        currentPhotoIndexRef.current = (currentPhotoIndexRef.current + 1) % faceImages.length;
+        currentPhotoIndexRef.current = getRandomFaceIndex(); // Random face instead of sequential
         
         // Update face image directly (animationBoxRef is now the img element)
         if (animationBoxRef.current) {
           (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
         }
-        console.log('🔄 X bounce - New face:', currentPhotoIndexRef.current);
+        console.log('🔄 X bounce - Random face #:', currentPhotoIndexRef.current);
       }
       newX = newX + 3 * directionRef.current.x;
 
       // Bounce Y direction  
       if (oldY <= 0 || oldY >= maxRef.current.y) {
         directionRef.current.y *= -1;
-        currentPhotoIndexRef.current = (currentPhotoIndexRef.current + 1) % faceImages.length;
+        currentPhotoIndexRef.current = getRandomFaceIndex(); // Random face instead of sequential
 
         // Update face image directly (animationBoxRef is now the img element)
         if (animationBoxRef.current) {
           (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
         }
-        console.log('🔄 Y bounce - New face:', currentPhotoIndexRef.current);
+        console.log('🔄 Y bounce - Random face #:', currentPhotoIndexRef.current);
       }
       newY = newY + 3 * directionRef.current.y;
 
@@ -191,14 +195,16 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
     if (isActive) {
       console.log('🏀 Starting DVD animation...');
       
-      // Initialize with random color and first face
+      // Initialize with random color and random starting face
       const initialColor = getRandomColor();
       currentColorRef.current = initialColor;
-      currentPhotoIndexRef.current = 0;
+      currentPhotoIndexRef.current = getRandomFaceIndex(); // Start with random face
       
       // Reset position to center of screen
       positionRef.current = { x: 300, y: 200 };
       directionRef.current = { x: 1, y: 1 };
+      
+      console.log('🎲 Starting with random face #:', currentPhotoIndexRef.current);
       
       // Start animation immediately (no delay)
       console.log('🚀 Calling movingBox()...');
