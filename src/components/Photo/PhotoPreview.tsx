@@ -48,7 +48,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
       <div className="relative">
         <img
           src={photo.dataUrl}
-          alt="Captured photo"
+          alt="Foto capturada"
           className="w-full rounded-lg shadow-lg"
           style={{
             aspectRatio: `${photo.dimensions.width}/${photo.dimensions.height}`,
@@ -70,19 +70,19 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
 
       {/* Photo Info */}
       <div className="bg-gray-50 rounded-lg p-4 space-y-2">
-        <h4 className="font-semibold text-gray-800">Photo Details</h4>
+        <h4 className="font-semibold text-gray-800">Detalles de la Foto</h4>
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-600">
           <div>
-            <span className="font-medium">Size:</span> {formatFileSize(photo.file.size)}
+            <span className="font-medium">Tamaño:</span> {formatFileSize(photo.file.size)}
           </div>
           <div>
-            <span className="font-medium">Format:</span> JPEG
+            <span className="font-medium">Formato:</span> JPEG
           </div>
           <div>
-            <span className="font-medium">Dimensions:</span> {photo.dimensions.width}×{photo.dimensions.height}
+            <span className="font-medium">Dimensiones:</span> {photo.dimensions.width}×{photo.dimensions.height}
           </div>
           <div>
-            <span className="font-medium">Quality:</span> High (90%)
+            <span className="font-medium">Calidad:</span> Alta (90%)
           </div>
         </div>
       </div>
@@ -93,7 +93,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
           <div className="flex items-center space-x-2">
             <span className="text-red-500 text-xl">⚠️</span>
             <div>
-              <h4 className="font-semibold text-red-800">Upload Failed</h4>
+              <h4 className="font-semibold text-red-800">Error al Subir</h4>
               <p className="text-red-600 text-sm">{uploadError}</p>
             </div>
           </div>
@@ -114,12 +114,12 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
           {isUploading ? (
             <>
               <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-              <span>Uploading to Party Wall...</span>
+              <span>Subiendo a la Pared de la Fiesta...</span>
             </>
           ) : (
             <>
               <span className="text-xl">⬆️</span>
-              <span>Add to Party Photos</span>
+              <span>Subir Foto</span>
             </>
           )}
         </button>
@@ -136,7 +136,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
             `}
           >
             <span className="text-lg">🔄</span>
-            <span>Retake</span>
+            <span>Retomar</span>
           </button>
 
           {onCancel && (
@@ -150,7 +150,7 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
               `}
             >
               <span className="text-lg">✕</span>
-              <span>Cancel</span>
+              <span>Cancelar</span>
             </button>
           )}
         </div>
@@ -162,9 +162,9 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
           <div className="flex items-center space-x-3">
             <div className="animate-pulse text-blue-500 text-xl">📤</div>
             <div className="flex-1">
-              <h4 className="font-semibold text-blue-800">Uploading Photo</h4>
+              <h4 className="font-semibold text-blue-800">Subiendo Foto</h4>
               <p className="text-blue-600 text-sm">
-                Your photo is being added to the party wall. It will appear on the big screen soon!
+                Tu foto se está agregando a la pared de la fiesta. ¡Aparecerá en la pantalla grande pronto!
               </p>
             </div>
           </div>
@@ -173,9 +173,9 @@ const PhotoPreview: React.FC<PhotoPreviewProps> = ({
 
       {/* Help Text */}
       <div className="text-center text-gray-500 text-sm space-y-1">
-        <p>📸 Your photo will appear in the live party collage</p>
-        <p>🖥️ Everyone will see it on the projector screen</p>
-        <p>🎉 Share memories throughout the party!</p>
+        <p>📸 Tu foto aparecerá en el collage en vivo de la fiesta</p>
+        <p>🖥️ Todos la verán en la pantalla del proyector</p>
+        <p>🎉 ¡Comparte recuerdos durante toda la fiesta!</p>
       </div>
     </div>
   );

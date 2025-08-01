@@ -10,7 +10,7 @@ interface TestResult {
 }
 
 export const SystemTest: React.FC = () => {
-  const { networkInfo, loading: networkLoading, error: networkError, refresh: refreshNetwork } = useNetworkInfo();
+  const { networkInfo, loading: networkLoading, error: networkError } = useNetworkInfo();
   const [tests, setTests] = useState<TestResult[]>([
     { name: 'Network Detection', status: 'pending', message: 'Testing...' },
     { name: 'Firebase Connection', status: 'pending', message: 'Testing...' },

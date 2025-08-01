@@ -3,20 +3,21 @@ import CameraCapture from '../components/Photo/CameraCapture';
 import PhotoPreview from '../components/Photo/PhotoPreview';
 import PhotoGrid from '../components/Photo/PhotoGrid';
 import ConnectionStatus from '../components/UI/ConnectionStatus';
-import { usePhotoUpload } from '../hooks/usePhotoUpload';
 import { CapturedPhoto } from '../hooks/useCamera';
-import { PhotoData } from '../types';
+import { addPhoto } from '../utils/firestore';
 
 const Photo: React.FC = () => {
   const [capturedPhoto, setCapturedPhoto] = useState<CapturedPhoto | null>(null);
   const [showCamera, setShowCamera] = useState(false);
-  const [uploadSuccess, setUploadSuccess] = useState<PhotoData | null>(null);
+  const [uploadSuccess, setUploadSuccess] = useState<boolean>(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   
-  const { uploadPhoto, isUploading, error: uploadError, clearError } = usePhotoUpload();
+  const clearError = () => setUploadError(null);
 
   const handleStartCamera = () => {
     setShowCamera(true);
-    setUploadSuccess(null);
+    setUploadSuccess(false);
   };
 
   const handlePhotoCapture = (photo: CapturedPhoto) => {
@@ -30,11 +31,20 @@ const Photo: React.FC = () => {
   };
 
   const handleUploadPhoto = async (photo: CapturedPhoto) => {
-    const result = await uploadPhoto(photo);
-    if (result) {
-      setUploadSuccess(result);
+    try {
+      setIsUploading(true);
+      setUploadError(null);
+      await addPhoto(photo.file);
+      setUploadSuccess(true);
       setCapturedPhoto(null);
       setShowCamera(false);
+      // Hide success message after 3 seconds
+      setTimeout(() => setUploadSuccess(false), 3000);
+    } catch (error) {
+      console.error('Error uploading photo:', error);
+      setUploadError(error instanceof Error ? error.message : 'Error al subir foto');
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -48,7 +58,7 @@ const Photo: React.FC = () => {
     setShowCamera(false);
   };
 
-  const handlePhotoClick = (photo: PhotoData) => {
+  const handlePhotoClick = (photo: any) => {
     // Could implement photo viewer modal here
     console.log('Clicked photo:', photo);
   };
@@ -83,7 +93,7 @@ const Photo: React.FC = () => {
           <div className="flex items-center justify-between">
             <div className="text-center flex-1">
               <h4 className="text-2xl text-red-800 font-serif mb-2">Error al Subir</h4>
-              <p className="text-lg text-red-600 font-serif">{uploadError.message}</p>
+              <p className="text-lg text-red-600 font-serif">{uploadError}</p>
             </div>
             <button
               onClick={clearError}

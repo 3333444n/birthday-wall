@@ -10,6 +10,7 @@ interface SimpleCanvasProps {
   };
   onCanvasReady?: (canvas: any) => void;
   onDrawingUpdate?: (drawing: any) => void;
+  zoom?: number;
 }
 
 export const DrawingCanvas: React.FC<SimpleCanvasProps> = ({
@@ -116,29 +117,23 @@ export const DrawingCanvas: React.FC<SimpleCanvasProps> = ({
   }, [onCanvasReady]);
 
   return (
-    <div className="relative w-full h-full flex items-center justify-center bg-gray-100 rounded-lg overflow-hidden">
-      <canvas
-        ref={canvasRef}
-        className="border border-gray-300 bg-white rounded shadow-sm cursor-crosshair"
-        style={{
-          touchAction: 'none',
-          userSelect: 'none',
-          maxWidth: '100%',
-          maxHeight: '100%',
-        }}
-        onMouseDown={startDrawing}
-        onMouseMove={draw}
-        onMouseUp={stopDrawing}
-        onMouseLeave={stopDrawing}
-        onTouchStart={startDrawing}
-        onTouchMove={draw}
-        onTouchEnd={stopDrawing}
-      />
-      
-      <div className="absolute bottom-2 right-2 text-xs text-gray-500 bg-white px-2 py-1 rounded">
-        Draw with your finger or mouse
-      </div>
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="bg-white cursor-crosshair block"
+      style={{
+        touchAction: 'none',
+        userSelect: 'none',
+        width: `${width}px`,
+        height: `${height}px`,
+      }}
+      onMouseDown={startDrawing}
+      onMouseMove={draw}
+      onMouseUp={stopDrawing}
+      onMouseLeave={stopDrawing}
+      onTouchStart={startDrawing}
+      onTouchMove={draw}
+      onTouchEnd={stopDrawing}
+    />
   );
 };
 

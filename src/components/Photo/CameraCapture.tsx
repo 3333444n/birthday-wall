@@ -68,10 +68,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div className="text-center py-12">
         <div className="text-6xl mb-4">🚫</div>
         <h3 className="text-xl font-bold text-gray-800 mb-4">
-          Camera Not Supported
+          Cámara No Soportada
         </h3>
         <p className="text-gray-600">
-          Your device doesn't support camera access through the browser.
+          Tu dispositivo no soporta acceso a la cámara a través del navegador.
         </p>
       </div>
     );
@@ -83,7 +83,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div className="text-center py-12">
         <div className="text-6xl mb-4">📵</div>
         <h3 className="text-xl font-bold text-gray-800 mb-4">
-          Camera Permission Required
+          Permiso de Cámara Requerido
         </h3>
         <p className="text-gray-600 mb-6">
           {error.message}
@@ -93,21 +93,21 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
             onClick={handleStartCamera}
             className="party-button w-full"
           >
-            🔄 Try Again
+            🔄 Intentar de Nuevo
           </button>
           <button 
             onClick={clearError}
             className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg w-full"
           >
-            Dismiss
+            Cerrar
           </button>
         </div>
         <div className="mt-6 text-sm text-gray-500">
-          <p className="mb-2">To enable camera access:</p>
+          <p className="mb-2">Para habilitar acceso a la cámara:</p>
           <ul className="text-left space-y-1">
-            <li>• Safari: Settings → Safari → Camera</li>
-            <li>• Chrome: Site Settings → Camera</li>
-            <li>• Firefox: Click camera icon in address bar</li>
+            <li>• Safari: Ajustes → Safari → Cámara</li>
+            <li>• Chrome: Configuración del Sitio → Cámara</li>
+            <li>• Firefox: Clic en el icono de cámara en la barra de direcciones</li>
           </ul>
         </div>
       </div>
@@ -120,7 +120,7 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div className="text-center py-12">
         <div className="text-6xl mb-4">⚠️</div>
         <h3 className="text-xl font-bold text-gray-800 mb-4">
-          Camera Error
+          Error de Cámara
         </h3>
         <p className="text-gray-600 mb-6">
           {error.message}
@@ -130,13 +130,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
             onClick={handleStartCamera}
             className="party-button w-full"
           >
-            🔄 Retry
+            🔄 Reintentar
           </button>
           <button 
             onClick={clearError}
             className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg w-full"
           >
-            Dismiss
+            Cerrar
           </button>
         </div>
       </div>
@@ -149,10 +149,10 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
       <div className="text-center py-12">
         <div className="text-6xl mb-4 animate-pulse">📱</div>
         <h3 className="text-xl font-bold text-gray-800 mb-4">
-          Initializing Camera...
+          Inicializando Cámara...
         </h3>
         <p className="text-gray-600 mb-6">
-          Getting your camera ready for photo capture
+          Preparando tu cámara para capturar fotos
         </p>
         <div className="animate-spin w-8 h-8 border-4 border-party-primary border-t-transparent rounded-full mx-auto"></div>
       </div>
@@ -233,13 +233,13 @@ const CameraCapture: React.FC<CameraCaptureProps> = ({
           <div className="absolute top-4 left-4 right-4 flex justify-between items-start">
             {/* Camera mode indicator */}
             <div className="bg-black/50 text-white px-3 py-1 rounded-full text-sm">
-              {currentFacingMode === 'user' ? '🤳 Front' : '📷 Back'}
+              {currentFacingMode === 'user' ? '🤳 Frontal' : '📷 Trasera'}
             </div>
 
             {/* Capturing indicator */}
             {isCapturing && (
               <div className="bg-red-500 text-white px-3 py-1 rounded-full text-sm animate-pulse">
-                📸 Capturing...
+                📸 Capturando...
               </div>
             )}
           </div>

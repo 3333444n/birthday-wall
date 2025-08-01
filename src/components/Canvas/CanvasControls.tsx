@@ -4,7 +4,6 @@ interface CanvasControlsProps {
   canvas: HTMLCanvasElement | null;
   onClear?: () => void;
   onUndo?: () => void;
-  onSave?: () => void;
   disabled?: boolean;
   isUndoAvailable?: boolean;
 }
@@ -13,7 +12,6 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
   canvas,
   onClear,
   onUndo,
-  onSave,
   disabled = false,
   isUndoAvailable = false,
 }) => {
@@ -49,19 +47,6 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
     onUndo?.();
   }, [onUndo]);
 
-  // Handle save canvas
-  const handleSave = useCallback(() => {
-    if (!canvas) return;
-    
-    // Save as image
-    const dataURL = canvas.toDataURL('image/png');
-    const link = document.createElement('a');
-    link.download = `birthday-drawing-${Date.now()}.png`;
-    link.href = dataURL;
-    link.click();
-    
-    onSave?.();
-  }, [canvas, onSave]);
 
   return (
     <div className="bg-gray-50 rounded-2xl shadow-lg p-6">
@@ -107,23 +92,6 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
           {showClearConfirm ? 'Toca de Nuevo para Borrar' : 'Borrar Todo'}
         </button>
 
-        {/* Save Button */}
-        <button
-          onClick={handleSave}
-          disabled={disabled}
-          className={`
-            w-full py-2 px-4 rounded-md text-sm font-medium transition-all duration-200 flex items-center justify-center gap-2
-            ${disabled
-              ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-              : 'bg-green-500 text-white hover:bg-green-600 shadow-sm'
-            }
-          `}
-        >
-          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-          Guardar Lienzo
-        </button>
 
         {/* Canvas Info */}
         <div className="text-xs text-gray-500 text-center pt-2">
@@ -137,12 +105,12 @@ export const CanvasControls: React.FC<CanvasControlsProps> = ({
 
       {/* Instructions for mobile */}
       <div className="mt-4 text-xs text-gray-500 bg-gray-50 rounded p-2">
-        <div className="font-medium mb-1">Drawing Tips:</div>
+        <div className="font-medium mb-1">Consejos de Dibujo:</div>
         <ul className="space-y-1">
-          <li>• Use your finger to draw</li>
-          <li>• Drawings sync in real-time</li>
-          <li>• Clear removes everything</li>
-          <li>• Save preserves your work</li>
+          <li>• Usa tu dedo para dibujar</li>
+          <li>• Los dibujos se sincronizan en tiempo real</li>
+          <li>• Borrar Todo limpia el lienzo</li>
+          <li>• Usa zoom para encontrar tu espacio</li>
         </ul>
       </div>
     </div>

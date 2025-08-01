@@ -200,7 +200,7 @@ const PhotoGrid: React.FC<PhotoGridProps> = ({
               onError={(e) => {
                 // Fallback to full resolution if thumbnail fails
                 const target = e.target as HTMLImageElement;
-                if (target.src !== photo.url) {
+                if (target.src !== photo.url && photo.url) {
                   target.src = photo.url;
                 }
               }}

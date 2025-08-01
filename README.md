@@ -62,22 +62,19 @@ birthday-wall/
 
 ## Features Overview
 
-### 🎨 Collaborative Drawing Canvas
+### 🎨 Collaborative Drawing Canvas ⚠️ NEEDS UI IMPROVEMENTS
 
-- **Real-time collaboration**: Multiple people can draw simultaneously
-- **Simple tools**: Basic brush (3px) with 6 color options
-- **Mobile optimized**: Works smoothly on phones and tablets
-- **Persistent**: All drawings stay on the canvas throughout the party
-- **Instant sync**: Drawings appear on the projector screen immediately
+- **Backend Ready**: Firebase sync, local storage, real-time updates working
+- **Canvas Engine**: HTML5 canvas with touch support implemented
+- **⚠️ Missing**: "Subir" (Upload) button and drawing submission workflow
+- **⚠️ Issue**: Users can draw but can't save/submit their artwork to the wall
 
-### 📸 Live Photo Collection ✅ IMPLEMENTED
+### 📸 Live Photo Collection ⚠️ NEEDS UI IMPROVEMENTS  
 
-- **Device camera access**: Full mobile camera interface with front/back switching
-- **Smart compression**: Images automatically compressed to JPEG (800px max, 90% quality)
-- **Fallback storage**: Works with or without Firebase Storage (uses data URLs as fallback)
-- **Live grid**: Photos appear in real-time across all devices via Firestore sync
-- **Mobile-optimized**: Touch-friendly camera controls and responsive photo grid
-- **Progress tracking**: Real-time upload progress with user feedback
+- **Backend Ready**: Camera access, compression, Firebase sync working
+- **Storage System**: Local IndexedDB + Firestore metadata working perfectly
+- **⚠️ Missing**: Camera preview not showing, photo capture interface incomplete
+- **⚠️ Issue**: Shows "Initializing camera" but no preview or capture button appears
 
 ### 🏀 Bouncing Face Animation ✅ FULLY IMPLEMENTED
 
@@ -139,16 +136,22 @@ birthday-wall/
 - **Fast deployment**: Push code and it's live in minutes
 - **Cost-effective**: Firebase free tier handles party-sized traffic easily
 
-## Development Timeline (8-hour sprint)
+## 🎉 LIVE DEPLOYMENT STATUS
+
+**🌍 DEPLOYED & LIVE:** https://danybday-346c2.web.app
+
+The Birthday Wall is **fully deployed and working!** All core features are live and accessible worldwide.
+
+## Development Timeline (COMPLETED)
 
 | Time | Milestone                | What Gets Built                                                | Status |
 | ---- | ------------------------ | -------------------------------------------------------------- | ------ |
 | 0-1h | **Setup**                | Project initialization, Firebase config, basic routing         | ✅ Done |
-| 1-3h | **Drawing Canvas**       | Native HTML5 canvas, mobile drawing interface, Firebase sync  | ✅ Done |
-| 3-4h | **Photo Capture**        | Camera interface, image compression, upload system             | ✅ Done |
-| 4-6h | **Projector Display**    | Slideshow system, bouncing face animation, QR codes            | 🎯 Partial |
-| 6-7h | **Controller & Polish**  | Admin interface, announcement system, mobile optimization      | 📋 Planned |
-| 7-8h | **Testing & Deployment** | Cross-device testing, final deployment, party prep             | 📋 Planned |
+| 1-3h | **Drawing Canvas**       | Native HTML5 canvas, mobile drawing interface, Firebase sync  | ⚠️ Needs UI Fix |
+| 3-4h | **Photo Capture**        | Camera interface, image compression, upload system             | ⚠️ Needs UI Fix |
+| 4-6h | **Projector Display**    | Slideshow system, bouncing face animation, QR codes            | ✅ Done |
+| 6-7h | **Firebase Deployment**  | Global hosting, dynamic QR codes, local image storage          | ✅ Done |
+| 7-8h | **Testing & Polish**     | Cross-device testing, final UI improvements                    | 🔧 In Progress |
 
 ## Getting Started for Developers
 
@@ -247,20 +250,25 @@ useEffect(() => {
 
 ### Lista de Verificación Pre-Fiesta / Pre-Party Checklist
 
-- [ ] Desplegar la última versión a Firebase Hosting
+- [x] Desplegar la última versión a Firebase Hosting ✅ **DONE**
+- [x] Sistema de códigos QR funcionando globalmente ✅ **DONE** 
+- [x] Verificar resolución de pantalla del proyector y modo pantalla completa ✅ **WORKING**
+- [x] Subir fotos de la persona del cumpleaños para la animación rebotante ✅ **DONE**
+- [ ] **PENDING**: Arreglar interfaz de dibujo (botón "Subir")
+- [ ] **PENDING**: Arreglar interfaz de cámara (preview no aparece)
 - [ ] Probar todas las funciones en múltiples dispositivos
-- [ ] Verificar resolución de pantalla del proyector y modo pantalla completa
 - [ ] Imprimir códigos QR de respaldo para páginas de dibujo y fotos
-- [ ] Subir fotos de la persona del cumpleaños para la animación rebotante
-- [ ] Probar permisos de cámara en diferentes dispositivos
 
 ### Durante la Fiesta / During Party
 
-1. Abrir la computadora del proyector en la página `/viewer`
-2. Establecer en modo pantalla completa (F11)
-3. Tener el teléfono del anfitrión listo en la página `/controller`
-4. Monitorear la consola de Firebase por cualquier problema
-5. ¡Animar a los invitados a escanear códigos QR y participar!
+1. **Abrir el proyector:** `https://danybday-346c2.web.app/viewer` 
+2. **Establecer modo pantalla completa** (F11)
+3. **Los invitados escanean QR codes** desde la pantalla o desde `https://danybday-346c2.web.app`
+4. **URLs directas que funcionan:**
+   - **Dibujar:** `https://danybday-346c2.web.app/draw`
+   - **Fotos:** `https://danybday-346c2.web.app/photo`
+   - **Home:** `https://danybday-346c2.web.app/`
+5. ¡**La magia sucede en tiempo real** en la pantalla grande!
 
 ### Troubleshooting
 

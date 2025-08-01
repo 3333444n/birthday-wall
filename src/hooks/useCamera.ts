@@ -95,17 +95,17 @@ export const useCamera = () => {
       if (error.name === 'NotAllowedError' || error.name === 'PermissionDeniedError') {
         cameraError = {
           code: 'PERMISSION_DENIED',
-          message: 'Camera permission denied. Please enable camera access in your browser settings.'
+          message: 'Permiso de cámara denegado. Por favor habilita el acceso a la cámara en la configuración de tu navegador.'
         };
       } else if (error.name === 'NotFoundError' || error.name === 'DevicesNotFoundError') {
         cameraError = {
           code: 'DEVICE_NOT_FOUND',
-          message: 'No camera device found on this device.'
+          message: 'No se encontró cámara en este dispositivo.'
         };
       } else {
         cameraError = {
           code: 'UNKNOWN',
-          message: error.message || 'Failed to access camera. Please try again.'
+          message: error.message || 'Error al acceder a la cámara. Por favor intenta de nuevo.'
         };
       }
 
@@ -229,7 +229,7 @@ export const useCamera = () => {
         isCapturing: false,
         error: {
           code: 'UNKNOWN',
-          message: 'Failed to capture photo. Please try again.'
+          message: 'Error al capturar foto. Por favor intenta de nuevo.'
         }
       }));
       return null;
