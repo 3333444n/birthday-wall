@@ -2,21 +2,21 @@
 
 ## What is this project?
 
-This is an interactive digital birthday party installation that creates a fun, engaging experience for party guests using just their phones and a projector screen.
+Esta es una instalación interactiva de fiesta de cumpleaños digital que crea una experiencia divertida y atractiva para los invitados usando solo sus teléfonos y una pantalla de proyector.
 
-### For Party Guests (Non-Programmers)
+### For Party Guests (Para los Invitados)
 
-Imagine walking into a birthday party and seeing a big screen on the wall that's constantly changing between different fun displays:
+Imagina entrar a una fiesta de cumpleaños y ver una pantalla grande en la pared que cambia constantemente entre diferentes visualizaciones divertidas:
 
-1. **🎨 Collaborative Drawing Wall**: A giant digital canvas where everyone can draw together! Scan a QR code with your phone, and you can add your own doodles, sketches, or birthday messages right on the shared canvas. Your drawing appears instantly on the big screen for everyone to see.
+1. **🎨 Pared de Dibujo Colaborativo**: ¡Un lienzo digital gigante donde todos pueden dibujar juntos! Escanea un código QR con tu teléfono y puedes agregar tus propios garabatos, bocetos o mensajes de cumpleaños directamente en el lienzo compartido. Tu dibujo aparece instantáneamente en la pantalla grande para que todos lo vean.
 
-2. **📸 Live Photo Collage**: Take photos throughout the party using your phone's camera, and watch them automatically appear in a growing photo grid on the screen. It's like a live scrapbook of the party happening in real-time!
+2. **📸 Collage de Fotos en Vivo**: Toma fotos durante toda la fiesta usando la cámara de tu teléfono, y míralas aparecer automáticamente en una cuadrícula de fotos en crecimiento en la pantalla. ¡Es como un álbum de recuerdos en vivo de la fiesta!
 
-3. **🏀 Bouncing Birthday Face**: The birthday person's face bounces around the screen like the old DVD screensaver, changing to different photos each time it hits an edge. Everyone always cheers when it hits a corner perfectly! ✅ **FULLY IMPLEMENTED**
+3. **🏀 Cara de Cumpleaños Rebotando**: La cara de la persona del cumpleaños rebota por la pantalla como el antiguo salvapantallas de DVD, cambiando a diferentes fotos cada vez que toca un borde. ¡Todos siempre gritan cuando toca una esquina perfectamente! ✅ **COMPLETAMENTE IMPLEMENTADO**
 
-4. **🌍 Happy Birthday Around the World**: The screen shows "Happy Birthday" in different languages, randomly combined with the birthday person's nicknames (Nanys, Danolo, Dano, Danilo, Nanis, Dany). Every few seconds a new combination appears like "¡Feliz Cumpleaños Danolo!" or "お誕生日おめでとう Nanis!" in elegant serif typography on a clean white background. ✅ **FULLY IMPLEMENTED**
+4. **🌍 Feliz Cumpleaños Alrededor del Mundo**: La pantalla muestra "Feliz Cumpleaños" en diferentes idiomas, combinado aleatoriamente con los apodos de la persona del cumpleaños (Nanys, Danolo, Dano, Danilo, Nanis, Dany). Cada pocos segundos aparece una nueva combinación como "¡Feliz Cumpleaños Danolo!" o "お誕生日おめでとう Nanis!" en elegante tipografía serif sobre un fondo blanco limpio. ✅ **COMPLETAMENTE IMPLEMENTADO**
 
-The party host can also pop up announcements on the screen from their phone (like "Cake time in 5 minutes!").
+El anfitrión de la fiesta también puede mostrar anuncios en la pantalla desde su teléfono (como "¡Hora del pastel en 5 minutos!").
 
 ### For Developers (Technical Overview)
 
@@ -89,20 +89,29 @@ birthday-wall/
 - **Clean design**: Pure faces with transparent containers, no visual clutter
 - **SlideContainer bypass**: Direct rendering solution that works around common black screen issues
 
-### 🌍 Multilingual Birthday Messages ✅ FULLY IMPLEMENTED
+### 🌍 Mensajes Multilingües de Cumpleaños ✅ COMPLETAMENTE IMPLEMENTADO
 
-- **12 Languages**: Happy Birthday in Spanish, English, French, Italian, German, Japanese, Korean, Russian, Portuguese, Dutch, Chinese, Arabic
-- **Random Nicknames**: Randomly cycles through Dany's nicknames (Nanys, Danolo, Dano, Danilo, Nanis, Dany)
-- **Elegant Design**: Large serif typography on pure white background with QR code in corner
-- **Random Combinations**: Every 2.5 seconds shows a new random nickname + language combination
-- **Clean Interface**: Minimalistic design focusing purely on the birthday message
+- **12 Idiomas**: Feliz Cumpleaños en Español, Inglés, Francés, Italiano, Alemán, Japonés, Coreano, Ruso, Portugués, Holandés, Chino, Árabe
+- **Apodos Aleatorios**: Cicla aleatoriamente a través de los apodos de Dany (Nanys, Danolo, Dano, Danilo, Nanis, Dany)
+- **Diseño Elegante**: Tipografía serif grande sobre fondo blanco puro con código QR en la esquina
+- **Combinaciones Aleatorias**: Cada 2.5 segundos muestra una nueva combinación aleatoria de apodo + idioma
+- **Interfaz Limpia**: Diseño minimalista enfocado puramente en el mensaje de cumpleaños
 
-### 📱 Host Controller
+### 🎨 Sistema de Diseño Minimalista ✅ NUEVO
 
-- **Announcement overlay**: Pop up messages over any slide
-- **Slide control**: Adjust timing and order of slides
-- **Emergency controls**: Clear canvas, downloads or reset if needed
-- **Mobile friendly**: Control everything from the host's phone
+- **Paleta de Colores**: Fondos blancos puros, texto negro, acentos grises
+- **Tipografía**: Fuentes serif elegantes (`font-serif`) en toda la aplicación
+- **Diseño Limpio**: Esquinas redondeadas, sombras sutiles, espacios en blanco amplios
+- **Interfaz en Español**: Toda la interfaz de usuario traducida al español para invitados hispanohablantes
+- **Consistencia Visual**: Lenguaje de diseño unificado en todos los componentes y páginas
+- **Códigos QR Grandes**: 280px para fácil escaneo desde la distancia
+
+### 📱 Controlador del Anfitrión
+
+- **Superposición de anuncios**: Mostrar mensajes sobre cualquier diapositiva
+- **Control de diapositivas**: Ajustar tiempo y orden de las diapositivas
+- **Controles de emergencia**: Limpiar lienzo, descargas o reiniciar si es necesario
+- **Amigable para móviles**: Controlar todo desde el teléfono del anfitrión
 
 ## Technology Stack Details
 
@@ -227,31 +236,31 @@ useEffect(() => {
 - Check projector display at actual party resolution
 - Test with slow network conditions
 
-## Party Day Setup
+## Configuración del Día de la Fiesta / Party Day Setup
 
-### Equipment Needed
+### Equipo Necesario / Equipment Needed
 
-- Laptop/computer connected to projector
-- Reliable WiFi network
-- Backup mobile hotspot (recommended)
-- QR code printouts (backup for screen QRs)
+- Laptop/computadora conectada al proyector
+- Red WiFi confiable
+- Hotspot móvil de respaldo (recomendado)
+- Códigos QR impresos (respaldo para los QRs de pantalla)
 
-### Pre-Party Checklist
+### Lista de Verificación Pre-Fiesta / Pre-Party Checklist
 
-- [ ] Deploy latest version to Firebase Hosting
-- [ ] Test all features on multiple devices
-- [ ] Verify projector display resolution and fullscreen mode
-- [ ] Print backup QR codes for drawing and photo pages
-- [ ] Upload birthday person's photos for bouncing animation
-- [ ] Test camera permissions on different devices
+- [ ] Desplegar la última versión a Firebase Hosting
+- [ ] Probar todas las funciones en múltiples dispositivos
+- [ ] Verificar resolución de pantalla del proyector y modo pantalla completa
+- [ ] Imprimir códigos QR de respaldo para páginas de dibujo y fotos
+- [ ] Subir fotos de la persona del cumpleaños para la animación rebotante
+- [ ] Probar permisos de cámara en diferentes dispositivos
 
-### During Party
+### Durante la Fiesta / During Party
 
-1. Open projector computer to `/viewer` page
-2. Set to fullscreen mode (F11)
-3. Have host phone ready on `/controller` page
-4. Monitor Firebase console for any issues
-5. Encourage guests to scan QR codes and participate!
+1. Abrir la computadora del proyector en la página `/viewer`
+2. Establecer en modo pantalla completa (F11)
+3. Tener el teléfono del anfitrión listo en la página `/controller`
+4. Monitorear la consola de Firebase por cualquier problema
+5. ¡Animar a los invitados a escanear códigos QR y participar!
 
 ### Troubleshooting
 
