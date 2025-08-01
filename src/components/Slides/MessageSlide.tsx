@@ -17,18 +17,18 @@ const MessageSlide: React.FC<SlideProps> = ({ isActive }) => {
 
   // Multilingual birthday message templates (keep the variety!)
   const birthdayTemplates = [
-    { template: '¡Feliz Cumpleaños {name}!', language: 'Español', flag: '🇪🇸' },
-    { template: 'Happy Birthday {name}!', language: 'English', flag: '🇺🇸' },
-    { template: 'Joyeux Anniversaire {name}!', language: 'Français', flag: '🇫🇷' },
-    { template: 'Buon Compleanno {name}!', language: 'Italiano', flag: '🇮🇹' },
-    { template: 'Alles Gute zum Geburtstag {name}!', language: 'Deutsch', flag: '🇩🇪' },
-    { template: 'お誕生日おめでとう {name}!', language: '日本語', flag: '🇯🇵' },
-    { template: '생일 축하해 {name}!', language: '한국어', flag: '🇰🇷' },
-    { template: 'С днем рождения {name}!', language: 'Русский', flag: '🇷🇺' },
-    { template: 'Feliz Aniversário {name}!', language: 'Português', flag: '🇧🇷' },
-    { template: 'Gelukkige Verjaardag {name}!', language: 'Nederlands', flag: '🇳🇱' },
-    { template: '生日快乐 {name}!', language: '中文', flag: '🇨🇳' },
-    { template: 'عيد ميلاد سعيد {name}!', language: 'العربية', flag: '🇸🇦' }
+    { template: '¡Feliz Cumpleaños {name}', language: 'Español', flag: '🇪🇸' },
+    { template: 'Happy Birthday {name}', language: 'English', flag: '🇺🇸' },
+    { template: 'Joyeux Anniversaire {name}', language: 'Français', flag: '🇫🇷' },
+    { template: 'Buon Compleanno {name}', language: 'Italiano', flag: '🇮🇹' },
+    { template: 'Alles Gute zum Geburtstag {name}', language: 'Deutsch', flag: '🇩🇪' },
+    { template: 'お誕生日おめでとう {name}', language: '日本語', flag: '🇯🇵' },
+    { template: '생일 축하해 {name}', language: '한국어', flag: '🇰🇷' },
+    { template: 'С днем рождения {name}', language: 'Русский', flag: '🇷🇺' },
+    { template: 'Feliz Aniversário {name}', language: 'Português', flag: '🇧🇷' },
+    { template: 'Gelukkige Verjaardag {name}', language: 'Nederlands', flag: '🇳🇱' },
+    { template: '生日快乐 {name}', language: '中文', flag: '🇨🇳' },
+    { template: 'عيد ميلاد سعيد {name}', language: 'العربية', flag: '🇸🇦' }
   ];
 
   // Function to generate random message
