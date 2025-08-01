@@ -88,15 +88,19 @@ const Viewer: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [slides.length]);
 
+  console.log('📺 Viewer rendering - currentSlide:', currentSlide, 'slides:', slides.map(s => s.type));
+  
   return (
     <div className="projector-display">
       {/* Render all slides */}
       {slides.map((slide, index) => {
         const SlideComponent = slide.component;
+        const isActive = index === currentSlide;
+        console.log(`📺 Rendering slide ${index} (${slide.type}):`, { isActive, currentSlide });
         return (
           <SlideComponent
             key={slide.type}
-            isActive={index === currentSlide}
+            isActive={isActive}
             duration={slide.duration}
           />
         );

@@ -1,261 +1,280 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { BouncingObject, SlideProps } from '../../types';
+import React, { useEffect, useState, useRef } from 'react';
+import { SlideProps } from '../../types';
 import SlideContainer from './SlideContainer';
 import QRCode from 'react-qr-code';
 
 const BouncingSlide: React.FC<SlideProps> = ({ isActive, duration }) => {
-  const [bouncingObject, setBouncingObject] = useState<BouncingObject | null>(null);
-  const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
+  console.log('🏀 BouncingSlide component called with:', { isActive, duration });
   const [cornerHits, setCornerHits] = useState(0);
-  const animationFrameRef = useRef<number>(0);
+  const [isCornerCelebrating, setIsCornerCelebrating] = useState(false);
+  
   const containerRef = useRef<HTMLDivElement>(null);
+  const animationBoxRef = useRef<HTMLDivElement>(null);
+  const timerRef = useRef<number | null>(null);
+  const cornerAnimationTimerRef = useRef<number | null>(null);
+  const framesSinceCornerRef = useRef(0);
+  const cornerDetectionRef = useRef(true);
+  
+  // Animation state using refs to avoid re-renders
+  const positionRef = useRef({ x: 100, y: 100 });
+  const directionRef = useRef({ x: 1, y: 1 });
+  const maxRef = useRef({ x: 0, y: 0 });
+  const currentColorRef = useRef('#ff6b6b');
+  const currentPhotoIndexRef = useRef(0);
 
-  // Birthday person's photos - in a real app, these would come from Firebase
-  const birthdayPhotos = [
-    '/birthday-photos/photo1.jpg',
-    '/birthday-photos/photo2.jpg',
-    '/birthday-photos/photo3.jpg',
-    '/birthday-photos/photo4.jpg',
-    // Add more photos as needed - fallback to emojis if no photos
+  // Import face images from assets
+  const faceImages = [
+    new URL('../../assets/faces/dany0.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany1.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany2.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany3.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany4.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany5.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany6.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany7.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany8.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany9.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany10.webp', import.meta.url).href,
+    new URL('../../assets/faces/dany11.webp', import.meta.url).href
   ];
 
-  // Fallback to emoji faces if no photos
+  // Fallback to emoji faces if images fail to load
   const emojiPhotos = ['🎂', '🎉', '🎈', '🎁', '🥳', '🎊', '🍰', '🌟', '🎭', '🎯', '🎪', '🎨'];
 
-  const photos = birthdayPhotos.length > 0 && birthdayPhotos[0] !== '/birthday-photos/photo1.jpg' 
-    ? birthdayPhotos 
-    : emojiPhotos;
+  // Utility functions adapted from jQuery snippet
+  const getRandomColor = () => {
+    const characters = "123456789ABCDEF";
+    let color = "#";
+    for (let i = 0; i < 3; i++) {
+      const randomIndex = Math.floor(Math.random() * 15);
+      color += characters[randomIndex] + characters[randomIndex];
+    }
+    return color;
+  };
 
-  // Initialize bouncing object
-  const initializeBouncingObject = useCallback(() => {
-    if (!containerRef.current) return;
+  const almostEqual = (a: number, b: number) => Math.abs(a - b) <= 5;
 
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
-    const size = 120; // Size of the bouncing object
+  const detectCorner = (newX: number, newY: number, maxX: number, maxY: number, w: number, h: number) => {
+    const newXwidth = newX + w;
+    const newYheight = newY + h;
 
-    return {
-      x: Math.random() * (containerRect.width - size),
-      y: Math.random() * (containerRect.height - size),
-      vx: (Math.random() - 0.5) * 8, // Random velocity between -4 and 4
-      vy: (Math.random() - 0.5) * 8,
-      width: size,
-      height: size,
-      imageUrl: photos[0]
-    };
-  }, [photos]);
+    const topLeft = almostEqual(newX, 0) && almostEqual(newY, 0);
+    const topRight = almostEqual(newXwidth, maxX) && almostEqual(newY, 0);
+    const bottomRight = almostEqual(newXwidth, maxX) && almostEqual(newYheight, maxY);
+    const bottomLeft = almostEqual(newX, 0) && almostEqual(newYheight, maxY);
 
-  // Animation loop
-  const animate = useCallback(() => {
-    if (!isActive || !bouncingObject || !containerRef.current) return;
+    if (topLeft || topRight || bottomRight || bottomLeft) {
+      onCornerHit();
+      return true;
+    }
+    return false;
+  };
 
-    const container = containerRef.current;
-    const containerRect = container.getBoundingClientRect();
+  const onCornerHit = () => {
+    if (cornerAnimationTimerRef.current) {
+      clearInterval(cornerAnimationTimerRef.current);
+    }
     
-    setBouncingObject(prev => {
-      if (!prev) return prev;
+    setCornerHits(prev => prev + 1);
+    setIsCornerCelebrating(true);
+    let animationCount = 0;
+    const newColor = getRandomColor();
 
-      let newX = prev.x + prev.vx;
-      let newY = prev.y + prev.vy;
-      let newVx = prev.vx;
-      let newVy = prev.vy;
-      let newPhotoIndex = currentPhotoIndex;
-      let newCornerHits = cornerHits;
-
-      // Bounce off walls and change photo
-      if (newX <= 0 || newX >= containerRect.width - prev.width) {
-        newVx = -newVx;
-        newX = newX <= 0 ? 0 : containerRect.width - prev.width;
-        newPhotoIndex = (newPhotoIndex + 1) % photos.length;
-        
-        // Check for corner hit
-        if ((newY <= 0) || (newY >= containerRect.height - prev.height)) {
-          newCornerHits++;
+    const vibrateRed = () => {
+      if (animationBoxRef.current) {
+        if (animationCount % 2 === 0) {
+          currentColorRef.current = newColor;
+          animationBoxRef.current.style.borderColor = newColor;
+          animationBoxRef.current.style.backgroundColor = newColor;
+          animationBoxRef.current.style.boxShadow = `0 0 20px ${newColor}`;
+        } else {
+          animationBoxRef.current.style.borderColor = '#ff0000';
+          animationBoxRef.current.style.backgroundColor = '#ff0000';
+          animationBoxRef.current.style.boxShadow = '0 0 20px #ff0000';
         }
       }
 
-      if (newY <= 0 || newY >= containerRect.height - prev.height) {
-        newVy = -newVy;
-        newY = newY <= 0 ? 0 : containerRect.height - prev.height;
-        newPhotoIndex = (newPhotoIndex + 1) % photos.length;
-        
-        // Check for corner hit
-        if ((newX <= 0) || (newX >= containerRect.width - prev.width)) {
-          newCornerHits++;
+      if (++animationCount > 26) {
+        if (cornerAnimationTimerRef.current) {
+          clearInterval(cornerAnimationTimerRef.current);
         }
+        setIsCornerCelebrating(false);
       }
+    };
 
-      // Update photo index if it changed
-      if (newPhotoIndex !== currentPhotoIndex) {
-        setCurrentPhotoIndex(newPhotoIndex);
-      }
+    cornerAnimationTimerRef.current = window.setInterval(vibrateRed, 60);
+  };
 
-      // Update corner hits if it changed
-      if (newCornerHits !== cornerHits) {
-        setCornerHits(newCornerHits);
-      }
-
-      return {
-        ...prev,
-        x: newX,
-        y: newY,
-        vx: newVx,
-        vy: newVy,
-        imageUrl: photos[newPhotoIndex]
-      };
-    });
-
-    animationFrameRef.current = requestAnimationFrame(animate);
-  }, [isActive, bouncingObject, currentPhotoIndex, cornerHits, photos]);
-
-  // Initialize and start animation when slide becomes active
-  useEffect(() => {
-    if (isActive && !bouncingObject) {
-      const newObj = initializeBouncingObject();
-      if (newObj) {
-        setBouncingObject(newObj);
-      }
+  const movingBox = () => {
+    if (!animationBoxRef.current || !isActive) {
+      console.log('❌ Animation not starting - missing refs or not active');
+      return;
     }
 
-    if (isActive && bouncingObject) {
-      animate();
+    console.log('🎯 Starting animation loop...');
+    const frameTimerInterval = 50; // Slower for debugging
+    let oldX = positionRef.current.x;
+    let oldY = positionRef.current.y;
+
+    const frame = () => {
+      if (!animationBoxRef.current || !isActive) return;
+
+      // Use window dimensions since we're fixed positioned
+      const windowWidth = window.innerWidth;
+      const windowHeight = window.innerHeight;
+      const boxWidth = 180; // Updated to match new size
+      const boxHeight = 180;
+
+      maxRef.current.x = windowWidth - boxWidth;
+      maxRef.current.y = windowHeight - boxHeight;
+
+      let newX = oldX;
+      let newY = oldY;
+
+      // Bounce X direction
+      if (oldX <= 0 || oldX >= maxRef.current.x) {
+        directionRef.current.x *= -1;
+        currentPhotoIndexRef.current = (currentPhotoIndexRef.current + 1) % faceImages.length;
+        
+        // Update face image directly (animationBoxRef is now the img element)
+        if (animationBoxRef.current) {
+          (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
+        }
+        console.log('🔄 X bounce - New face:', currentPhotoIndexRef.current);
+      }
+      newX = newX + 3 * directionRef.current.x;
+
+      // Bounce Y direction  
+      if (oldY <= 0 || oldY >= maxRef.current.y) {
+        directionRef.current.y *= -1;
+        currentPhotoIndexRef.current = (currentPhotoIndexRef.current + 1) % faceImages.length;
+
+        // Update face image directly (animationBoxRef is now the img element)
+        if (animationBoxRef.current) {
+          (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
+        }
+        console.log('🔄 Y bounce - New face:', currentPhotoIndexRef.current);
+      }
+      newY = newY + 3 * directionRef.current.y;
+
+      oldX = newX;
+      oldY = newY;
+      positionRef.current = { x: newX, y: newY };
+
+      // Update DOM position
+      if (animationBoxRef.current) {
+        animationBoxRef.current.style.left = `${newX}px`;
+        animationBoxRef.current.style.top = `${newY}px`;
+      }
+
+      // Check for corner hits
+      if (cornerDetectionRef.current && detectCorner(newX, newY, windowWidth, windowHeight, boxWidth, boxHeight)) {
+        cornerDetectionRef.current = false;
+        framesSinceCornerRef.current = 0;
+      } else if (++framesSinceCornerRef.current > 50) {
+        cornerDetectionRef.current = true;
+        framesSinceCornerRef.current = 0;
+      }
+
+      console.log('📍 Position update:', newX, newY);
+    };
+
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = window.setInterval(frame, frameTimerInterval);
+    console.log('✅ Animation timer started with interval:', frameTimerInterval);
+  };
+
+  // Main animation effect
+  useEffect(() => {
+    if (isActive) {
+      console.log('🏀 Starting DVD animation...');
+      
+      // Initialize with random color and first face
+      const initialColor = getRandomColor();
+      currentColorRef.current = initialColor;
+      currentPhotoIndexRef.current = 0;
+      
+      // Reset position to center of screen
+      positionRef.current = { x: 300, y: 200 };
+      directionRef.current = { x: 1, y: 1 };
+      
+      // Start animation immediately (no delay)
+      console.log('🚀 Calling movingBox()...');
+      movingBox();
+    } else {
+      console.log('🏀 Stopping DVD animation...');
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      if (cornerAnimationTimerRef.current) {
+        clearInterval(cornerAnimationTimerRef.current);
+        cornerAnimationTimerRef.current = null;
+      }
+      setCornerHits(0);
+      setIsCornerCelebrating(false);
     }
 
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
+      console.log('🧹 Cleanup animation timers...');
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+      if (cornerAnimationTimerRef.current) {
+        clearInterval(cornerAnimationTimerRef.current);
       }
     };
-  }, [isActive, bouncingObject, animate, initializeBouncingObject]);
-
-  // Handle window resize
-  useEffect(() => {
-    const handleResize = () => {
-      if (isActive) {
-        const newObj = initializeBouncingObject();
-        if (newObj) {
-          setBouncingObject(newObj);
-        }
-      }
-    };
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [isActive, initializeBouncingObject]);
+  }, [isActive]);
 
   const birthdayPersonName = import.meta.env.VITE_BIRTHDAY_PERSON_NAME || 'Dany';
   const drawUrl = `${window.location.origin}/draw`;
 
+  console.log('BouncingSlide render:', { isActive, cornerHits });
+  
+  // Always show something if active to test
+  if (isActive) {
+    console.log('🏀 BouncingSlide is ACTIVE, rendering...');
+  }
+  
+  // BYPASS SlideContainer for testing
+  if (!isActive) {
+    return null; // Don't render anything if not active
+  }
+
   return (
-    <SlideContainer isActive={isActive} duration={duration}>
-      <div ref={containerRef} className="relative w-full h-full overflow-hidden bg-black">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-black to-gray-800">
-          {/* Floating particles */}
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute animate-pulse"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 3}s`,
-                animationDuration: `${2 + Math.random() * 2}s`
-              }}
-            >
-              ✨
-            </div>
-          ))}
-        </div>
+    <div className="fixed inset-0 w-full h-full bg-black z-10">
+      {/* Pure Bouncing Face - No Container, Just Image */}
+      <img
+        ref={animationBoxRef}
+        src={faceImages[currentPhotoIndexRef.current % faceImages.length]}
+        alt={`${birthdayPersonName} bouncing`}
+        className="absolute object-cover rounded-full shadow-2xl z-30"
+        style={{
+          left: `${positionRef.current.x}px`,
+          top: `${positionRef.current.y}px`,
+          width: '180px',  // Bigger size
+          height: '180px', // Bigger size
+          transition: 'none'
+        }}
+        onLoad={() => console.log('✅ Face image loaded:', faceImages[currentPhotoIndexRef.current % faceImages.length])}
+        onError={(e) => {
+          console.log('❌ Face image failed to load, using emoji fallback');
+          const target = e.target as HTMLImageElement;
+          target.style.display = 'none';
+        }}
+      />
 
-        {/* Title */}
-        <div className="absolute top-8 left-8 z-10">
-          <h1 className="text-6xl font-bold text-white drop-shadow-2xl">
-            🏀 Bouncing {birthdayPersonName}!
-          </h1>
-          <p className="text-2xl text-white/80 mt-2">
-            {cornerHits > 0 ? `${cornerHits} corner hit${cornerHits !== 1 ? 's' : ''}! 🎉` : 'Watch for corner hits!'}
-          </p>
-        </div>
-
-        {/* QR Code */}
-        <div className="absolute top-8 right-8 bg-white p-4 rounded-xl shadow-2xl z-10">
-          <div className="text-center mb-3">
-            <p className="text-gray-800 font-semibold">Join the Fun!</p>
-            <p className="text-gray-600 text-sm">Scan to draw & photo</p>
-          </div>
-          <QRCode
-            size={120}
-            value={drawUrl}
-            bgColor="#ffffff"
-            fgColor="#000000"
-          />
-        </div>
-
-        {/* Bouncing Object */}
-        {bouncingObject && (
-          <div
-            className="absolute transition-none rounded-full shadow-2xl z-20"
-            style={{
-              left: `${bouncingObject.x}px`,
-              top: `${bouncingObject.y}px`,
-              width: `${bouncingObject.width}px`,
-              height: `${bouncingObject.height}px`,
-              transform: 'translate3d(0, 0, 0)', // Hardware acceleration
-            }}
-          >
-            {photos === emojiPhotos ? (
-              // Emoji display
-              <div className="w-full h-full flex items-center justify-center text-8xl bg-white/20 backdrop-blur-sm rounded-full border-4 border-white/50">
-                {bouncingObject.imageUrl}
-              </div>
-            ) : (
-              // Photo display
-              <img
-                src={bouncingObject.imageUrl}
-                alt={`${birthdayPersonName} bouncing`}
-                className="w-full h-full object-cover rounded-full border-4 border-white/50"
-                onError={(e) => {
-                  // Fallback to emoji if image fails to load
-                  const target = e.target as HTMLImageElement;
-                  target.style.display = 'none';
-                  target.parentElement!.innerHTML = `
-                    <div class="w-full h-full flex items-center justify-center text-8xl bg-white/20 backdrop-blur-sm rounded-full border-4 border-white/50">
-                      ${emojiPhotos[currentPhotoIndex % emojiPhotos.length]}
-                    </div>
-                  `;
-                }}
-              />
-            )}
-          </div>
-        )}
-
-        {/* Corner hit celebration */}
-        {cornerHits > 0 && (
-          <div className="absolute inset-0 pointer-events-none z-30">
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-ping">
-              <div className="text-9xl">🎯</div>
-            </div>
-          </div>
-        )}
-
-        {/* Instructions */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-center z-10">
-          <div className="bg-black/50 backdrop-blur-sm rounded-2xl px-6 py-4">
-            <p className="text-white text-lg">
-              Everyone cheer when it hits a corner! 🎉
-            </p>
+      {/* Corner hit celebration only */}
+      {isCornerCelebrating && (
+        <div className="absolute inset-0 pointer-events-none z-40">
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 animate-ping">
+            <div className="text-9xl">🎯</div>
           </div>
         </div>
-
-        {/* Photo counter */}
-        <div className="absolute bottom-8 right-8 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 z-10">
-          <p className="text-white font-semibold">
-            Photo {currentPhotoIndex + 1} of {photos.length}
-          </p>
-        </div>
-      </div>
-    </SlideContainer>
+      )}
+    </div>
   );
 };
 
