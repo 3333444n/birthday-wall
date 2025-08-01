@@ -1,19 +1,34 @@
-// Firebase document types - Based on specification requirements
+// Firebase document types - Updated for local storage integration
 export interface Drawing {
   id: string;
-  url: string;
+  localImageId: string;
   timestamp: number;
+  deviceId: string;
 }
 
 export interface Photo {
   id: string;
-  url: string;
+  localImageId: string;
   timestamp: number;
+  deviceId: string;
 }
 
 export interface Announcement {
   text: string;
   active: boolean;
+}
+
+// Local storage types
+export interface StoredImage {
+  id: string;
+  data: string; // base64 or blob URL
+  timestamp: number;
+  type: 'canvas' | 'photo';
+  metadata?: {
+    width?: number;
+    height?: number;
+    size?: number;
+  };
 }
 
 export interface SlideConfig {
@@ -27,11 +42,13 @@ export interface DrawingData extends Drawing {
   userId?: string;
   color?: string;
   strokeWidth?: number;
+  url?: string; // For backwards compatibility
 }
 
 export interface PhotoData extends Photo {
   thumbnailUrl?: string;
   userId?: string;
+  url?: string; // For backwards compatibility
   metadata?: {
     width: number;
     height: number;

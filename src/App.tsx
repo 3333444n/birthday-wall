@@ -8,6 +8,9 @@ import Draw from './pages/Draw';
 import Photo from './pages/Photo';
 import Controller from './pages/Controller';
 
+// Test component
+import { SystemTest } from './components/UI/SystemTest';
+
 const App: React.FC = () => {
   return (
     <Router>
@@ -27,6 +30,9 @@ const App: React.FC = () => {
           
           {/* Host controller interface */}
           <Route path="/controller" element={<Controller />} />
+          
+          {/* System test page */}
+          <Route path="/test" element={<SystemTest />} />
           
           {/* Catch-all redirect to home */}
           <Route path="*" element={<Home />} />

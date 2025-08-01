@@ -1,27 +1,48 @@
 import React from 'react';
 import { SlideProps } from '../../types';
 import QRCode from 'react-qr-code';
+import { useNetworkInfo, generatePageURLs } from '../../hooks/useNetworkInfo';
 
 const QRCodeSlide: React.FC<SlideProps> = ({ isActive }) => {
-  const baseUrl = window.location.origin;
+  const { networkInfo, loading, error, refresh } = useNetworkInfo();
   const birthdayPersonName = import.meta.env.VITE_BIRTHDAY_PERSON_NAME || 'Dany';
 
-  const qrCodes = [
-    {
-      title: 'Dibujar Juntos',
-      url: `${baseUrl}/draw`,
-      description: 'Agrega tu arte al lienzo compartido'
-    },
-    {
-      title: 'Compartir Fotos',
-      url: `${baseUrl}/photo`,
-      description: 'Captura recuerdos de la fiesta'
-    }
-  ];
+  // Generate URLs based on detected network info
+  const getQRCodes = () => {
+    if (!networkInfo) return [];
+    
+    const urls = generatePageURLs(networkInfo.baseURL);
+    return [
+      {
+        title: 'Dibujar Juntos',
+        url: urls.draw,
+        description: 'Agrega tu arte al lienzo compartido'
+      },
+      {
+        title: 'Compartir Fotos', 
+        url: urls.photo,
+        description: 'Captura recuerdos de la fiesta'
+      }
+    ];
+  };
+
+  const qrCodes = getQRCodes();
 
   // BYPASS SlideContainer to fix black screen issue
   if (!isActive) {
     return null; // Don't render anything if not active
+  }
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="fixed inset-0 w-full h-full bg-white z-10 flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-6xl mb-4">⏳</div>
+          <p className="text-3xl text-gray-600 font-serif">Detectando IP de red...</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -65,8 +86,31 @@ const QRCodeSlide: React.FC<SlideProps> = ({ isActive }) => {
           </div>
         </div>
 
-        {/* Instructions */}
+        {/* Network Info & Instructions */}
         <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 text-center">
+          {networkInfo && (
+            <div className="mb-4">
+              <p className="text-2xl text-gray-700 font-serif mb-2">
+                🌐 Red Local: {networkInfo.localIP}:{networkInfo.port}
+              </p>
+              {networkInfo.isLocalhost && (
+                <p className="text-xl text-amber-600 font-serif mb-2">
+                  ⚠️ Solo accesible desde este dispositivo
+                </p>
+              )}
+              {error && (
+                <div className="mb-2">
+                  <p className="text-lg text-red-600 font-serif mb-1">❌ {error}</p>
+                  <button 
+                    onClick={refresh}
+                    className="text-lg text-blue-600 font-serif underline hover:text-blue-800"
+                  >
+                    🔄 Reintentar detección
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
           <p className="text-3xl text-gray-500 font-serif">
             No necesitas app • Funciona en todos los teléfonos
           </p>
