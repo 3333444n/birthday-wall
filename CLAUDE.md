@@ -2,14 +2,19 @@
 
 ## Project Overview
 
-This is an interactive digital birthday party installation that creates a fun, engaging experience for party guests using their phones and a projector screen. The system allows real-time collaboration through drawing, photo sharing, and interactive displays.
+This is an interactive digital birthday party installation that creates a fun, engaging experience for party guests using their phones and a projector screen. The system focuses on a clean, minimal projector experience with Spotify Jam integration.
 
-### Key Features
-- **🎨 Collaborative Drawing Wall**: Real-time shared canvas using Fabric.js
-- **📸 Live Photo Collage**: Camera capture with instant display
-- **🏀 Bouncing Birthday Face**: Physics-based animation with photo rotation
-- **🌍 Multilingual Birthday Messages**: Dynamic text display in multiple languages
-- **📱 Host Controller**: Admin interface for announcements and control
+### Key Features - CURRENT WORKING VERSION ✅
+- **🏀 Bouncing Birthday Face**: Physics-based animation with photo rotation (WHITE BACKGROUND)
+- **🌍 Multilingual Birthday Messages**: Static message per slide rotation (NO QR CODES)
+- **🎵 Spotify Jam Integration**: Clean QR code for music collaboration (NO SHADOWS, NO EMOJIS)
+- **📱 Drawing & Photo Pages**: Individual mobile interfaces (LOCALHOST ONLY - Firebase deployment issues)
+
+### Simplified Viewer Experience
+The projector display now shows only 3 clean slides:
+1. **Bouncing Slide** (18s) - Dany's face bouncing on white background, no shadows
+2. **Message Slide** (10s) - Single random birthday message in multiple languages, pure white background  
+3. **Spotify Jam Slide** (8s) - Clean QR code with "Únete al jam" text, no decorations
 
 ## Technical Architecture
 
@@ -55,19 +60,32 @@ This is an interactive digital birthday party installation that creates a fun, e
 - `vite`: Build tool and dev server
 - `tailwindcss@^3.4`: CSS framework (v3 for stability)
 
-## 🎉 PRODUCTION DEPLOYMENT STATUS ✅ LIVE
+## 🎉 CURRENT PROJECT STATUS - DECEMBER 2024
 
-**🌍 LIVE WEBSITE:** https://danybday-346c2.web.app
+**🌍 LIVE WEBSITE:** https://danybday-346c2.web.app  
+**🖥️ LOCALHOST DEVELOPMENT:** Working perfectly with all features
 
-**Current Status**: Fully deployed and globally accessible!
-- **Firebase Project**: `danybday-346c2` ✅ LIVE IN PRODUCTION
-- **Firestore**: ✅ Real-time database working perfectly  
-- **Local Storage**: ✅ IndexedDB + localStorage fallback implemented
-- **Hosting**: ✅ Deployed with global CDN via Firebase Hosting
-- **Environment**: ✅ Production credentials working flawlessly
-- **QR Codes**: ✅ Generate Firebase URLs automatically, no IP detection needed
-- **Global Access**: ✅ Works from any device, anywhere in the world
-- **Real-time Sync**: ✅ All devices sync instantly via Firestore
+### ✅ WORKING FEATURES (Localhost)
+- **Viewer Experience**: Clean 3-slide rotation with no shadows, no emojis
+- **Bouncing Animation**: Dany's faces on white background, smooth physics
+- **Birthday Messages**: Random multilingual messages, one per slide cycle
+- **Spotify QR Code**: Minimal design, ready for jam integration
+- **Drawing Interface**: Canvas with tools, zoom, upload functionality  
+- **Photo Interface**: Camera access, capture, compression pipeline
+- **Real-time Sync**: Firebase Firestore working locally
+
+### ⚠️ DEPLOYMENT ISSUE
+- **Problem**: Firebase deploy commands succeed but changes don't appear live
+- **Workaround**: All development and testing on localhost:5173
+- **Safe Version**: Current GitHub commit represents working localhost state
+- **Next Step**: Debug Firebase deployment pipeline
+
+### 🎯 PARTY-READY STATUS
+- **Projector Display**: ✅ Ready (localhost)
+- **Mobile Interfaces**: ✅ Ready (localhost)  
+- **Spotify Integration**: ✅ Ready (need actual jam URL)
+- **Network Setup**: ✅ Can run on local network for party
+- **Firebase Production**: ❌ Deployment issues need resolution
 
 ## Firebase Setup Guide (Reference - Already Completed)
 

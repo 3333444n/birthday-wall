@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import BouncingSlide from '../components/Slides/BouncingSlide';
 import MessageSlide from '../components/Slides/MessageSlide';
 import QRCodeSlide from '../components/Slides/QRCodeSlide';
-import DrawingSlide from '../components/Slides/DrawingSlide';
-import PhotoSlide from '../components/Slides/PhotoSlide';
 import { SlideType } from '../types';
 
 interface SlideConfig {
@@ -13,34 +11,22 @@ interface SlideConfig {
   component: React.ComponentType<{ isActive: boolean; duration?: number }>;
 }
 
-const Viewer: React.FC = () => {
+const ViewerSafe: React.FC = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   
-  // Extended 5-slide configuration with Canvas and Photo Album
+  // Original 3-slide configuration - SAFE VERSION
   const slides: SlideConfig[] = [
     { 
       type: 'bouncing', 
       title: '🏀 Bouncing Birthday Face', 
-      duration: 15000, // 15 seconds
+      duration: 18000, // 18 seconds
       component: BouncingSlide 
     },
     { 
       type: 'messages', 
       title: '🌍 Happy Birthday Messages', 
-      duration: 8000, // 8 seconds
+      duration: 10000, // 10 seconds
       component: MessageSlide 
-    },
-    { 
-      type: 'drawing', 
-      title: '🎨 Canvas Artworks', 
-      duration: 12000, // 12 seconds
-      component: DrawingSlide 
-    },
-    { 
-      type: 'photos', 
-      title: '📷 Photo Album', 
-      duration: 12000, // 12 seconds
-      component: PhotoSlide 
     },
     { 
       type: 'qr', 
@@ -81,21 +67,6 @@ const Viewer: React.FC = () => {
             document.exitFullscreen();
           }
           break;
-        case '1':
-          setCurrentSlide(0); // Jump to bouncing
-          break;
-        case '2':
-          setCurrentSlide(1); // Jump to messages
-          break;
-        case '3':
-          setCurrentSlide(2); // Jump to drawings
-          break;
-        case '4':
-          setCurrentSlide(3); // Jump to photos
-          break;
-        case '5':
-          setCurrentSlide(4); // Jump to QR
-          break;
       }
     };
 
@@ -103,7 +74,7 @@ const Viewer: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyPress);
   }, [slides.length]);
 
-  console.log('📺 Viewer rendering - currentSlide:', currentSlide, 'slides:', slides.map(s => s.type));
+  console.log('📺 ViewerSafe rendering - currentSlide:', currentSlide, 'slides:', slides.map(s => s.type));
   
   return (
     <div className="projector-display">
@@ -111,7 +82,7 @@ const Viewer: React.FC = () => {
       {slides.map((slide, index) => {
         const SlideComponent = slide.component;
         const isActive = index === currentSlide;
-        console.log(`📺 Viewer rendering slide ${index} (${slide.type}):`, { isActive, currentSlide });
+        console.log(`📺 ViewerSafe rendering slide ${index} (${slide.type}):`, { isActive, currentSlide });
         return (
           <SlideComponent
             key={slide.type}
@@ -128,17 +99,16 @@ const Viewer: React.FC = () => {
             {slides.map((slide, index) => (
               <div
                 key={index}
-                className={`w-3 h-3 rounded-full transition-all duration-300 cursor-pointer ${
+                className={`w-3 h-3 rounded-full transition-all duration-300 ${
                   index === currentSlide 
                     ? 'bg-white shadow-lg' 
                     : 'bg-white/30 hover:bg-white/50'
                 }`}
                 title={slide.title}
-                onClick={() => setCurrentSlide(index)}
               />
             ))}
             <div className="ml-3 text-white/80 text-sm font-medium">
-              {currentSlide + 1}/{slides.length}
+              {currentSlide + 1}/{slides.length} - SAFE
             </div>
           </div>
         </div>
@@ -149,20 +119,7 @@ const Viewer: React.FC = () => {
         <div className="text-center">
           <div>F11: Fullscreen | ESC: Exit</div>
           <div>← → Space: Navigate</div>
-          <div>1-5: Jump to Slide</div>
-          <div className="text-blue-300 font-bold">FULL VERSION</div>
-        </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="fixed bottom-0 left-0 right-0 z-40">
-        <div className="bg-gray-200/20 h-1">
-          <div 
-            className="bg-white h-full transition-all duration-1000 ease-linear"
-            style={{
-              width: `${((currentSlide + 1) / slides.length) * 100}%`
-            }}
-          />
+          <div className="text-green-300 font-bold">SAFE VERSION</div>
         </div>
       </div>
 
@@ -170,4 +127,4 @@ const Viewer: React.FC = () => {
   );
 };
 
-export default Viewer;
+export default ViewerSafe;
