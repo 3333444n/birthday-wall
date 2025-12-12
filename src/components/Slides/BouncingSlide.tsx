@@ -1,17 +1,22 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { SlideProps } from '../../types';
+// Removed import
+interface SlideProps {
+  isActive: boolean;
+  onSlideComplete?: () => void;
+  duration?: number;
+}
 
 const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
   console.log('🏀 BouncingSlide component called with:', { isActive });
   const [cornerHits, setCornerHits] = useState(0);
   const [isCornerCelebrating, setIsCornerCelebrating] = useState(false);
-  
+
   const animationBoxRef = useRef<HTMLImageElement>(null);
   const timerRef = useRef<number | null>(null);
   const cornerAnimationTimerRef = useRef<number | null>(null);
   const framesSinceCornerRef = useRef(0);
   const cornerDetectionRef = useRef(true);
-  
+
   // Animation state using refs to avoid re-renders
   const positionRef = useRef({ x: 100, y: 100 });
   const directionRef = useRef({ x: 1, y: 1 });
@@ -19,20 +24,24 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
   const currentColorRef = useRef('#ff6b6b');
   const currentPhotoIndexRef = useRef(0);
 
-  // Import face images from assets
+  // Import Kike photos from public/birthday-photos
   const faceImages = [
-    new URL('../../assets/faces/dany0.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany1.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany2.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany3.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany4.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany5.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany6.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany7.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany8.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany9.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany10.webp', import.meta.url).href,
-    new URL('../../assets/faces/dany11.webp', import.meta.url).href
+    '/birthday-photos/kike1.webp',
+    '/birthday-photos/kike2.webp',
+    '/birthday-photos/kike3.webp',
+    '/birthday-photos/kike4.webp',
+    '/birthday-photos/kike5.webp',
+    '/birthday-photos/kike6.webp',
+    '/birthday-photos/kike7.webp',
+    '/birthday-photos/kike8.webp',
+    '/birthday-photos/kike9.webp',
+    '/birthday-photos/kike10.webp',
+    '/birthday-photos/kike11.webp',
+    '/birthday-photos/kike12.webp',
+    '/birthday-photos/kike13.webp',
+    '/birthday-photos/kike14.webp',
+    '/birthday-photos/kike15.webp',
+    '/birthday-photos/kike16.webp'
   ];
 
 
@@ -47,8 +56,9 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
     return color;
   };
 
-  const getRandomFaceIndex = () => {
-    return Math.floor(Math.random() * faceImages.length);
+  const getNextFaceIndex = (currentIndex: number) => {
+    // Sequential cycling: go to next photo in order
+    return (currentIndex + 1) % faceImages.length;
   };
 
   const almostEqual = (a: number, b: number) => Math.abs(a - b) <= 5;
@@ -73,7 +83,7 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
     if (cornerAnimationTimerRef.current) {
       clearInterval(cornerAnimationTimerRef.current);
     }
-    
+
     setCornerHits(prev => prev + 1);
     setIsCornerCelebrating(true);
     let animationCount = 0;
@@ -133,26 +143,26 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
       // Bounce X direction
       if (oldX <= 0 || oldX >= maxRef.current.x) {
         directionRef.current.x *= -1;
-        currentPhotoIndexRef.current = getRandomFaceIndex(); // Random face instead of sequential
-        
+        currentPhotoIndexRef.current = getNextFaceIndex(currentPhotoIndexRef.current);
+
         // Update face image directly (animationBoxRef is now the img element)
         if (animationBoxRef.current) {
           (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
         }
-        console.log('🔄 X bounce - Random face #:', currentPhotoIndexRef.current);
+        console.log('🔄 X bounce - Next face #:', currentPhotoIndexRef.current);
       }
       newX = newX + 3 * directionRef.current.x;
 
-      // Bounce Y direction  
+      // Bounce Y direction
       if (oldY <= 0 || oldY >= maxRef.current.y) {
         directionRef.current.y *= -1;
-        currentPhotoIndexRef.current = getRandomFaceIndex(); // Random face instead of sequential
+        currentPhotoIndexRef.current = getNextFaceIndex(currentPhotoIndexRef.current);
 
         // Update face image directly (animationBoxRef is now the img element)
         if (animationBoxRef.current) {
           (animationBoxRef.current as HTMLImageElement).src = faceImages[currentPhotoIndexRef.current];
         }
-        console.log('🔄 Y bounce - Random face #:', currentPhotoIndexRef.current);
+        console.log('🔄 Y bounce - Next face #:', currentPhotoIndexRef.current);
       }
       newY = newY + 3 * directionRef.current.y;
 
@@ -189,18 +199,18 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
   useEffect(() => {
     if (isActive) {
       console.log('🏀 Starting DVD animation...');
-      
-      // Initialize with random color and random starting face
+
+      // Initialize with random color and first face (kike1)
       const initialColor = getRandomColor();
       currentColorRef.current = initialColor;
-      currentPhotoIndexRef.current = getRandomFaceIndex(); // Start with random face
-      
+      currentPhotoIndexRef.current = 0; // Start with first photo (kike1)
+
       // Reset position to center of screen
       positionRef.current = { x: 300, y: 200 };
       directionRef.current = { x: 1, y: 1 };
-      
-      console.log('🎲 Starting with random face #:', currentPhotoIndexRef.current);
-      
+
+      console.log('🎲 Starting with first face (kike1):', currentPhotoIndexRef.current);
+
       // Start animation immediately (no delay)
       console.log('🚀 Calling movingBox()...');
       movingBox();
@@ -232,12 +242,12 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
   const birthdayPersonName = import.meta.env.VITE_BIRTHDAY_PERSON_NAME || 'Dany';
 
   console.log('BouncingSlide render:', { isActive, cornerHits });
-  
+
   // Always show something if active to test
   if (isActive) {
     console.log('🏀 BouncingSlide is ACTIVE, rendering...');
   }
-  
+
   // BYPASS SlideContainer for testing
   if (!isActive) {
     return null; // Don't render anything if not active
@@ -250,7 +260,7 @@ const BouncingSlide: React.FC<SlideProps> = ({ isActive }) => {
         ref={animationBoxRef}
         src={faceImages[currentPhotoIndexRef.current % faceImages.length]}
         alt={`${birthdayPersonName} bouncing`}
-        className="absolute object-cover rounded-full z-30"
+        className="absolute object-contain z-30"
         style={{
           left: `${positionRef.current.x}px`,
           top: `${positionRef.current.y}px`,
